@@ -129,7 +129,13 @@
     renderPreview();
   }
 
+  function isFreshMode(){
+    const params = new URLSearchParams(location.search);
+    return params.has('fresh') || params.get('mode') === 'fresh' || params.get('blank') === '1';
+  }
+
   function load(){
+    if(isFreshMode()) return; // skip loading saved answers when sharing fresh links
     try{
       const raw = localStorage.getItem(STORAGE_KEY);
       if(!raw) return;
