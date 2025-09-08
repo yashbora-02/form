@@ -1,5 +1,6 @@
 (function(){
   const STORAGE_KEY = 'ds160-helper-data-v1';
+  const CONFIRM_KEY = 'ds160-helper-confirmed-v1';
 
   // Navigation
   const navButtons = Array.from(document.querySelectorAll('.nav-btn'));
@@ -8,7 +9,7 @@
   function showSection(id){
     sections.forEach(s=>s.classList.toggle('active', s.dataset.section===id));
     navButtons.forEach(b=>b.classList.toggle('active', b.dataset.target===id));
-    if(id==='summary') renderSummary();
+    if(id==='preview') renderPreview();
   }
 
   document.body.addEventListener('click', (e)=>{
@@ -59,6 +60,10 @@
   ];
   const stateSelect = document.getElementById('usState');
   stateSelect.innerHTML = `<option value=""></option>` + usStates.map(s=>`<option>${s}</option>`).join('');
+  const usContactState = document.getElementById('usContactState');
+  if(usContactState){ usContactState.innerHTML = `<option value=""></option>` + usStates.map(s=>`<option>${s}</option>`).join(''); }
+  const sevisState = document.getElementById('sevisState');
+  if(sevisState){ sevisState.innerHTML = `<option value=""></option>` + usStates.map(s=>`<option>${s}</option>`).join(''); }
 
   // Data handling
   const forms = sections.map(s=>s.tagName==='FORM'?s:null).filter(Boolean);
@@ -77,6 +82,30 @@
     });
     return data;
   }
+
+  // Repeatable rows (Add Another / Remove)
+  document.addEventListener('click', (e)=>{
+    const addBtn = e.target.closest('.add-row');
+    if(addBtn){
+      const repeat = addBtn.closest('.repeat');
+      const items = repeat.querySelector('.items');
+      const firstItem = items.querySelector('.item');
+      const clone = firstItem.cloneNode(true);
+      // clear inputs
+      clone.querySelectorAll('input, select, textarea').forEach(el=>{ if(el.type==='radio' || el.type==='checkbox'){ el.checked=false; } else { el.value=''; } });
+      items.appendChild(clone);
+      save();
+    }
+    const removeBtn = e.target.closest('.remove-row');
+    if(removeBtn){
+      const item = removeBtn.closest('.item');
+      const items = item.parentElement;
+      if(items.children.length>1){
+        item.remove();
+        save();
+      }
+    }
+  });
 
   function fillForms(data){
     if(!data) return;
@@ -97,7 +126,7 @@
   function save(){
     const data = collectData();
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    renderSummary();
+    renderPreview();
   }
 
   function load(){
@@ -111,21 +140,41 @@
     }
   }
 
-  function renderSummary(){
+  function renderPreview(){
     const pre = document.getElementById('summaryPre');
     const list = document.getElementById('kvList');
     const data = collectData();
     pre.textContent = JSON.stringify(data, null, 2);
-    const entries = Object.entries(data);
-    list.innerHTML = entries.map(([k,v])=>{
-      const val = Array.isArray(v) ? v.join(', ') : String(v ?? '');
-      return `<div class="kv-row"><div class="kv-key">${k}</div><div class="kv-val">${val}</div><div><button class="copy-one" data-key="${k}">Copy</button></div></div>`;
+    const confirmed = loadConfirmed();
+    const groups = [];
+    sections.forEach(s=>{
+      if(s.dataset.section==='preview') return;
+      const fields = Array.from(s.querySelectorAll('[name]'))
+        .map(el=>el.name)
+        .filter((v,i,a)=>a.indexOf(v)===i);
+      if(fields.length){
+        groups.push({ title: s.querySelector('h2')?.textContent || s.dataset.section, fields });
+      }
+    });
+    list.innerHTML = groups.map(g=>{
+      const rows = g.fields.map(k=>{
+        const val = Array.isArray(data[k]) ? data[k].join(', ') : String(data[k] ?? '');
+        const isConfirmed = !!confirmed[k];
+        return `<div class="kv-row" data-key="${k}"><div class="kv-key">${k}</div><div class="kv-val">${val}</div><div class="kv-actions"><button class="btn-correct ${isConfirmed?'btn-confirmed':''}" data-key="${k}">${isConfirmed?'Correct✓':'Correct'}</button><button class="btn-edit" data-key="${k}">Edit</button><button class="copy-one" data-key="${k}">Copy</button></div></div>`;
+      }).join('');
+      return `<div class="group"><h4>${g.title}</h4><div class="kv-list">${rows}</div></div>`;
     }).join('');
   }
 
   // Autosave on input
   document.addEventListener('input', (e)=>{
     if(e.target.matches('input, select')){
+      // If a field changed, clear its confirmed state
+      const nm = e.target.name;
+      if(nm){
+        const conf = loadConfirmed();
+        if(conf[nm]){ delete conf[nm]; saveConfirmed(conf); }
+      }
       save();
     }
   });
@@ -148,13 +197,49 @@
     window.print();
   });
   document.getElementById('kvList').addEventListener('click', async (e)=>{
-    const btn = e.target.closest('.copy-one');
-    if(!btn) return;
-    const data = collectData();
-    const key = btn.dataset.key;
-    const val = data[key];
-    await navigator.clipboard.writeText(Array.isArray(val)?val.join(', '):String(val ?? ''));
+    const copyBtn = e.target.closest('.copy-one');
+    const editBtn = e.target.closest('.btn-edit');
+    const correctBtn = e.target.closest('.btn-correct');
+    if(copyBtn){
+      const data = collectData();
+      const key = copyBtn.dataset.key;
+      const val = data[key];
+      await navigator.clipboard.writeText(Array.isArray(val)?val.join(', '):String(val ?? ''));
+      return;
+    }
+    if(editBtn){
+      const key = editBtn.dataset.key;
+      const sectionId = findSectionForField(key);
+      if(sectionId) showSection(sectionId);
+      return;
+    }
+    if(correctBtn){
+      const key = correctBtn.dataset.key;
+      const conf = loadConfirmed();
+      conf[key] = true;
+      saveConfirmed(conf);
+      renderPreview();
+    }
   });
+
+  function findSectionForField(fieldName){
+    for(const s of sections){
+      const els = s.querySelectorAll('[name]');
+      for(const el of els){
+        if(el.name === fieldName){
+          return s.dataset.section;
+        }
+      }
+    }
+    return null;
+  }
+
+  function loadConfirmed(){
+    try{ return JSON.parse(localStorage.getItem(CONFIRM_KEY) || '{}'); }catch{ return {}; }
+  }
+  function saveConfirmed(obj){
+    localStorage.setItem(CONFIRM_KEY, JSON.stringify(obj||{}));
+  }
   document.getElementById('importInput').addEventListener('change', async (e)=>{
     const file = e.target.files && e.target.files[0];
     if(!file) return;
@@ -162,7 +247,7 @@
     const data = JSON.parse(text);
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     fillForms(data);
-    renderSummary();
+    renderPreview();
     e.target.value = '';
   });
   document.getElementById('resetBtn').addEventListener('click', ()=>{
@@ -174,7 +259,7 @@
 
   // Initialize
   load();
-  renderSummary();
+  renderPreview();
 })();
 
 

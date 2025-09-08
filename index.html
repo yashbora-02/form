@@ -27,7 +27,21 @@
         <li><button data-target="personal2" class="nav-btn">Personal 2</button></li>
         <li><button data-target="travel" class="nav-btn">Travel</button></li>
         <li><button data-target="companions" class="nav-btn">Travel Companions</button></li>
-        <li><button data-target="summary" class="nav-btn">Summary</button></li>
+        <li><button data-target="addrphone" class="nav-btn">Address & Phone</button></li>
+        <li><button data-target="passport" class="nav-btn">Passport</button></li>
+        <li><button data-target="uscontact" class="nav-btn">U.S. Contact</button></li>
+        <li><button data-target="family" class="nav-btn">Family</button></li>
+        <li><button data-target="workpresent" class="nav-btn">Work/Edu: Present</button></li>
+        <li><button data-target="workprevious" class="nav-btn">Work/Edu: Previous</button></li>
+        <li><button data-target="workadditional" class="nav-btn">Work/Edu: Additional</button></li>
+        <li><button data-target="security1" class="nav-btn">Security 1</button></li>
+        <li><button data-target="security2" class="nav-btn">Security 2</button></li>
+        <li><button data-target="security3" class="nav-btn">Security 3</button></li>
+        <li><button data-target="security4" class="nav-btn">Security 4</button></li>
+        <li><button data-target="security5" class="nav-btn">Security 5</button></li>
+        <li><button data-target="student" class="nav-btn">Student/SEVIS</button></li>
+        <li><button data-target="location" class="nav-btn">Location</button></li>
+        <li><button data-target="preview" class="nav-btn">Preview</button></li>
       </ul>
     </nav>
 
@@ -250,10 +264,296 @@
         </div>
       </form>
 
-      <!-- Summary -->
-      <section id="section-summary" class="form-section" data-section="summary">
-        <h2>Summary</h2>
-        <p>Review and quickly copy values. You can also export/import JSON at the top.</p>
+      <!-- Address & Phone -->
+      <form id="form-addrphone" class="form-section" data-section="addrphone">
+        <h2>Address and Phone Information</h2>
+        <div class="grid">
+          <h3 class="full">Home Address</h3>
+          <label class="full">Street Address (Line 1)<input name="homeStreet1"></label>
+          <label class="full">Street Address (Line 2)<input name="homeStreet2"></label>
+          <label>City<input name="homeCity"></label>
+          <label>State/Province<input name="homeState"></label>
+          <label>Postal Zone/ZIP Code<input name="homeZip"></label>
+          <label>Country/Region<input name="homeCountry" list="countries"></label>
+          <fieldset class="full"><legend>Is Mailing Address same as Home?</legend>
+            <div class="inline"><label><input type="radio" name="mailingSame" value="yes" checked> Yes</label><label><input type="radio" name="mailingSame" value="no"> No</label></div>
+          </fieldset>
+
+          <h3 class="full">Phone</h3>
+          <label>Primary Phone Number<input name="primaryPhone"></label>
+          <label>Secondary Phone Number<input name="secondaryPhone"></label>
+          <label>Work Phone Number<input name="workPhone"></label>
+          <fieldset class="full"><legend>Have you used other phone numbers in the last five years?</legend>
+            <div class="inline"><label><input type="radio" name="usedOtherPhones" value="yes"> Yes</label><label><input type="radio" name="usedOtherPhones" value="no" checked> No</label></div>
+          </fieldset>
+
+          <h3 class="full">Email</h3>
+          <label class="full">Email Address<input name="email"></label>
+          <fieldset class="full"><legend>Have you used other email addresses in the last five years?</legend>
+            <div class="inline"><label><input type="radio" name="usedOtherEmails" value="yes"> Yes</label><label><input type="radio" name="usedOtherEmails" value="no" checked> No</label></div>
+          </fieldset>
+
+          <h3 class="full">Social Media</h3>
+          <div class="repeat full">
+            <div class="items">
+              <div class="item grid">
+                <label>
+                  Social Media Provider/Platform
+                  <select name="socialPlatform">
+                    <option value="">- SELECT ONE -</option>
+                    <option>Instagram</option><option>Facebook</option><option>Twitter/X</option><option>LinkedIn</option><option>TikTok</option><option>Reddit</option><option>Snapchat</option><option>None</option>
+                  </select>
+                </label>
+                <label class="full">Social Media Identifier<input name="socialIdentifier"></label>
+                <div><button type="button" class="remove-row">Remove</button></div>
+              </div>
+            </div>
+            <button type="button" class="add-row">Add Another</button>
+          </div>
+
+          <fieldset class="full"><legend>Other content-sharing websites used within last five years?</legend>
+            <div class="inline"><label><input type="radio" name="otherWebsitesUsed" value="yes"> Yes</label><label><input type="radio" name="otherWebsitesUsed" value="no" checked> No</label></div>
+          </fieldset>
+        </div>
+        <div class="nav"><button type="button" class="back" data-back="companions">Back</button><button type="button" class="next" data-next="passport">Next: Passport</button></div>
+      </form>
+
+      <!-- Passport -->
+      <form id="form-passport" class="form-section" data-section="passport">
+        <h2>Passport Information</h2>
+        <div class="grid">
+          <label>Passport/Travel Document Type<select name="passportType"><option>REGULAR</option><option>OFFICIAL</option><option>DIPLOMATIC</option></select></label>
+          <label class="full">Passport/Travel Document Number<input name="passportNumber"></label>
+          <label>Passport Book Number<input name="passportBookNumber"></label>
+          <label class="full">Country/Authority that Issued<input name="passportIssuingCountry" list="countries"></label>
+          <h3 class="full">Where was the Passport/Travel Document Issued?</h3>
+          <label>City<input name="passportIssueCity"></label>
+          <label>State/Province<input name="passportIssueState"></label>
+          <label>Country/Region<input name="passportIssueCountry" list="countries"></label>
+          <fieldset class="full"><legend>Issuance Date</legend>
+            <div class="dob"><label>Day<input name="passportIssueDay" inputmode="numeric" maxlength="2"></label><label>Month<select name="passportIssueMonth"><option></option><option>JAN</option><option>FEB</option><option>MAR</option><option>APR</option><option>MAY</option><option>JUN</option><option>JUL</option><option>AUG</option><option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option></select></label><label>Year<input name="passportIssueYear" inputmode="numeric" maxlength="4"></label></div>
+          </fieldset>
+          <fieldset class="full"><legend>Expiration Date</legend>
+            <div class="dob"><label>Day<input name="passportExpDay" inputmode="numeric" maxlength="2"></label><label>Month<select name="passportExpMonth"><option></option><option>JAN</option><option>FEB</option><option>MAR</option><option>APR</option><option>MAY</option><option>JUN</option><option>JUL</option><option>AUG</option><option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option></select></label><label>Year<input name="passportExpYear" inputmode="numeric" maxlength="4"></label></div>
+          </fieldset>
+          <fieldset class="full"><legend>Have you ever lost a passport or had one stolen?</legend><div class="inline"><label><input type="radio" name="lostPassport" value="yes"> Yes</label><label><input type="radio" name="lostPassport" value="no" checked> No</label></div></fieldset>
+        </div>
+        <div class="nav"><button type="button" class="back" data-back="addrphone">Back</button><button type="button" class="next" data-next="uscontact">Next: U.S. Contact</button></div>
+      </form>
+
+      <!-- U.S. Contact -->
+      <form id="form-uscontact" class="form-section" data-section="uscontact">
+        <h2>U.S. Point of Contact Information</h2>
+        <div class="grid">
+          <label>Surnames<input name="usContactSurname"></label>
+          <label>Given Names<input name="usContactGiven"></label>
+          <label class="full">Organization Name<input name="usContactOrg"></label>
+          <label class="full">Relationship to You<select name="usContactRelation"><option>SCHOOL OFFICIAL</option><option>FRIEND</option><option>RELATIVE</option><option>OTHER</option></select></label>
+          <h3 class="full">Address and Phone of Point of Contact</h3>
+          <label class="full">U.S. Street Address (Line 1)<input name="usContactStreet1"></label>
+          <label class="full">U.S. Street Address (Line 2)<input name="usContactStreet2"></label>
+          <label>City<input name="usContactCity"></label>
+          <label>State<select name="usContactState" id="usContactState"></select></label>
+          <label>ZIP Code<input name="usContactZip"></label>
+          <label>Phone Number<input name="usContactPhone"></label>
+          <label>Email Address<input name="usContactEmail"></label>
+        </div>
+        <div class="nav"><button type="button" class="back" data-back="passport">Back</button><button type="button" class="next" data-next="family">Next: Family</button></div>
+      </form>
+
+      <!-- Family -->
+      <form id="form-family" class="form-section" data-section="family">
+        <h2>Family Information: Relatives</h2>
+        <div class="grid">
+          <h3 class="full">Father</h3>
+          <label>Surnames<input name="fatherSurname"></label>
+          <label>Given Names<input name="fatherGiven"></label>
+          <fieldset class="full"><legend>Father's Date of Birth</legend><div class="dob"><label>Day<input name="fatherDobDay" maxlength="2" inputmode="numeric"></label><label>Month<select name="fatherDobMonth"><option></option><option>JAN</option><option>FEB</option><option>MAR</option><option>APR</option><option>MAY</option><option>JUN</option><option>JUL</option><option>AUG</option><option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option></select></label><label>Year<input name="fatherDobYear" maxlength="4" inputmode="numeric"></label></div></fieldset>
+          <fieldset class="full"><legend>Is your father in the U.S.?</legend><div class="inline"><label><input type="radio" name="fatherInUS" value="yes"> Yes</label><label><input type="radio" name="fatherInUS" value="no" checked> No</label></div></fieldset>
+
+          <h3 class="full">Mother</h3>
+          <label>Surnames<input name="motherSurname"></label>
+          <label>Given Names<input name="motherGiven"></label>
+          <fieldset class="full"><legend>Mother's Date of Birth</legend><div class="dob"><label>Day<input name="motherDobDay" maxlength="2" inputmode="numeric"></label><label>Month<select name="motherDobMonth"><option></option><option>JAN</option><option>FEB</option><option>MAR</option><option>APR</option><option>MAY</option><option>JUN</option><option>JUL</option><option>AUG</option><option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option></select></label><label>Year<input name="motherDobYear" maxlength="4" inputmode="numeric"></label></div></fieldset>
+          <fieldset class="full"><legend>Is your mother in the U.S.?</legend><div class="inline"><label><input type="radio" name="motherInUS" value="yes"> Yes</label><label><input type="radio" name="motherInUS" value="no" checked> No</label></div></fieldset>
+
+          <fieldset class="full"><legend>Immediate relatives in the U.S.?</legend><div class="inline"><label><input type="radio" name="immediateRelativesUS" value="yes"> Yes</label><label><input type="radio" name="immediateRelativesUS" value="no" checked> No</label></div></fieldset>
+          <fieldset class="full"><legend>Any other relatives in the U.S.?</legend><div class="inline"><label><input type="radio" name="otherRelativesUS" value="yes"> Yes</label><label><input type="radio" name="otherRelativesUS" value="no" checked> No</label></div></fieldset>
+        </div>
+        <div class="nav"><button type="button" class="back" data-back="uscontact">Back</button><button type="button" class="next" data-next="workpresent">Next: Work/Edu Present</button></div>
+      </form>
+
+      <!-- Work/Education: Present -->
+      <form id="form-workpresent" class="form-section" data-section="workpresent">
+        <h2>Present Work/Education/Training</h2>
+        <div class="grid">
+          <label class="full">Primary Occupation<select name="primaryOccupation"><option value="">- SELECT ONE -</option><option>EDUCATION</option><option>ENGINEERING</option><option>BUSINESS</option><option>STUDENT</option><option>OTHER</option></select></label>
+          <label class="full">Present Employer or School Name<input name="presentEmployer"></label>
+          <h3 class="full">Address</h3>
+          <label class="full">Street Address (Line 1)<input name="presentStreet1"></label>
+          <label class="full">Street Address (Line 2)<input name="presentStreet2"></label>
+          <label>City<input name="presentCity"></label>
+          <label>State/Province<input name="presentState"></label>
+          <label>Postal Zone/ZIP Code<input name="presentZip"></label>
+          <label>Country/Region<input name="presentCountry" list="countries"></label>
+          <fieldset class="full"><legend>Start Date</legend><div class="dob"><label>Day<input name="presentStartDay" maxlength="2" inputmode="numeric"></label><label>Month<select name="presentStartMonth"><option></option><option>JAN</option><option>FEB</option><option>MAR</option><option>APR</option><option>MAY</option><option>JUN</option><option>JUL</option><option>AUG</option><option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option></select></label><label>Year<input name="presentStartYear" maxlength="4" inputmode="numeric"></label></div></fieldset>
+          <label>Work Phone Number<input name="presentWorkPhone"></label>
+          <label>Monthly Income in Local Currency<input name="presentMonthlyIncome"></label>
+          <label class="full">Briefly describe your duties<textarea name="presentDuties"></textarea></label>
+        </div>
+        <div class="nav"><button type="button" class="back" data-back="family">Back</button><button type="button" class="next" data-next="workprevious">Next: Work/Edu Previous</button></div>
+      </form>
+
+      <!-- Work/Education: Previous -->
+      <form id="form-workprevious" class="form-section" data-section="workprevious">
+        <h2>Previous Work/Education</h2>
+        <div class="grid">
+          <fieldset class="full"><legend>Were you previously employed?</legend><div class="inline"><label><input type="radio" name="prevEmployed" value="yes"> Yes</label><label><input type="radio" name="prevEmployed" value="no" checked> No</label></div></fieldset>
+          <fieldset class="full"><legend>Have you attended educational institutions at a secondary level or above?</legend><div class="inline"><label><input type="radio" name="attendedSecondary" value="yes"> Yes</label><label><input type="radio" name="attendedSecondary" value="no" checked> No</label></div></fieldset>
+          <div class="repeat full">
+            <div class="items">
+              <div class="item grid">
+                <label class="full">Name of Institution<input name="schoolName"></label>
+                <label class="full">Street Address (Line 1)<input name="schoolStreet1"></label>
+                <label class="full">Street Address (Line 2)<input name="schoolStreet2"></label>
+                <label>City<input name="schoolCity"></label>
+                <label>State/Province<input name="schoolState"></label>
+                <label>Postal Zone/ZIP Code<input name="schoolZip"></label>
+                <label>Country/Region<input name="schoolCountry" list="countries"></label>
+                <label class="full">Course of Study<input name="schoolCourse"></label>
+                <fieldset class="full"><legend>Date of Attendance From</legend><div class="dob"><label>Day<input name="schoolFromDay" maxlength="2" inputmode="numeric"></label><label>Month<select name="schoolFromMonth"><option></option><option>JAN</option><option>FEB</option><option>MAR</option><option>APR</option><option>MAY</option><option>JUN</option><option>JUL</option><option>AUG</option><option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option></select></label><label>Year<input name="schoolFromYear" maxlength="4" inputmode="numeric"></label></div></fieldset>
+                <fieldset class="full"><legend>Date of Attendance To</legend><div class="dob"><label>Day<input name="schoolToDay" maxlength="2" inputmode="numeric"></label><label>Month<select name="schoolToMonth"><option></option><option>JAN</option><option>FEB</option><option>MAR</option><option>APR</option><option>MAY</option><option>JUN</option><option>JUL</option><option>AUG</option><option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option></select></label><label>Year<input name="schoolToYear" maxlength="4" inputmode="numeric"></label></div></fieldset>
+                <div><button type="button" class="remove-row">Remove</button></div>
+              </div>
+            </div>
+            <button type="button" class="add-row">Add Another</button>
+          </div>
+        </div>
+        <div class="nav"><button type="button" class="back" data-back="workpresent">Back</button><button type="button" class="next" data-next="workadditional">Next: Additional</button></div>
+      </form>
+
+      <!-- Work/Education: Additional -->
+      <form id="form-workadditional" class="form-section" data-section="workadditional">
+        <h2>Additional Work/Education/Training Information</h2>
+        <div class="grid">
+          <fieldset class="full"><legend>Do you belong to a clan or tribe?</legend><div class="inline"><label><input type="radio" name="belongClan" value="yes"> Yes</label><label><input type="radio" name="belongClan" value="no" checked> No</label></div></fieldset>
+
+          <h3 class="full">Languages You Speak</h3>
+          <div class="repeat full">
+            <div class="items">
+              <div class="item grid">
+                <label class="full">Language Name<input name="languageName"></label>
+                <div><button type="button" class="remove-row">Remove</button></div>
+              </div>
+            </div>
+            <button type="button" class="add-row">Add Another</button>
+          </div>
+
+          <fieldset class="full"><legend>Traveled to any countries/regions in last five years?</legend><div class="inline"><label><input type="radio" name="traveledLast5Years" value="yes"> Yes</label><label><input type="radio" name="traveledLast5Years" value="no" checked> No</label></div></fieldset>
+          <fieldset class="full"><legend>Belonged to or worked for any organizations?</legend><div class="inline"><label><input type="radio" name="belongedOrganizations" value="yes"> Yes</label><label><input type="radio" name="belongedOrganizations" value="no" checked> No</label></div></fieldset>
+          <div class="repeat full">
+            <div class="items">
+              <div class="item grid">
+                <label class="full">Organization Name<input name="organizationName"></label>
+                <div><button type="button" class="remove-row">Remove</button></div>
+              </div>
+            </div>
+            <button type="button" class="add-row">Add Another</button>
+          </div>
+
+          <fieldset class="full"><legend>Any specialized skills or training (firearms, explosives, nuclear, biological, or chemical)?</legend><div class="inline"><label><input type="radio" name="specializedSkills" value="yes"> Yes</label><label><input type="radio" name="specializedSkills" value="no" checked> No</label></div></fieldset>
+          <fieldset class="full"><legend>Have you ever served in the military?</legend><div class="inline"><label><input type="radio" name="servedMilitary" value="yes"> Yes</label><label><input type="radio" name="servedMilitary" value="no" checked> No</label></div></fieldset>
+          <fieldset class="full"><legend>Paramilitary/vigilante/rebel/insurgent involvement?</legend><div class="inline"><label><input type="radio" name="paramilitaryInvolvement" value="yes"> Yes</label><label><input type="radio" name="paramilitaryInvolvement" value="no" checked> No</label></div></fieldset>
+        </div>
+        <div class="nav"><button type="button" class="back" data-back="workprevious">Back</button><button type="button" class="next" data-next="security1">Next: Security 1</button></div>
+      </form>
+
+      <!-- Security and Background: Part 1 -->
+      <form id="form-security1" class="form-section" data-section="security1">
+        <h2>Security and Background: Part 1</h2>
+        <div class="grid">
+          <fieldset class="full"><legend>Communicable disease of public health significance?</legend><div class="inline"><label><input type="radio" name="healthCommunicableDisease" value="yes"> Yes</label><label><input type="radio" name="healthCommunicableDisease" value="no" checked> No</label></div></fieldset>
+          <fieldset class="full"><legend>Mental or physical disorder that poses or is likely to pose a threat to safety?</legend><div class="inline"><label><input type="radio" name="healthDisorderThreat" value="yes"> Yes</label><label><input type="radio" name="healthDisorderThreat" value="no" checked> No</label></div></fieldset>
+          <label class="full">If yes, explain<input name="healthDisorderExplain"></label>
+          <fieldset class="full"><legend>Drug abuser or addict?</legend><div class="inline"><label><input type="radio" name="drugAbuser" value="yes"> Yes</label><label><input type="radio" name="drugAbuser" value="no" checked> No</label></div></fieldset>
+        </div>
+        <div class="nav"><button type="button" class="back" data-back="workadditional">Back</button><button type="button" class="next" data-next="security2">Next: Security 2</button></div>
+      </form>
+
+      <!-- Security and Background: Part 2 -->
+      <form id="form-security2" class="form-section" data-section="security2">
+        <h2>Security and Background: Part 2</h2>
+        <div class="grid">
+          <fieldset class="full"><legend>Arrested or convicted for any offense or crime?</legend><div class="inline"><label><input type="radio" name="arrestedConvicted" value="yes"> Yes</label><label><input type="radio" name="arrestedConvicted" value="no" checked> No</label></div></fieldset>
+          <fieldset class="full"><legend>Violated or engaged in conspiracy to violate any law relating to controlled substances?</legend><div class="inline"><label><input type="radio" name="controlledSubstances" value="yes"> Yes</label><label><input type="radio" name="controlledSubstances" value="no" checked> No</label></div></fieldset>
+          <fieldset class="full"><legend>Prostitution or unlawful commercialized vice in the past 10 years?</legend><div class="inline"><label><input type="radio" name="prostitutionVice" value="yes"> Yes</label><label><input type="radio" name="prostitutionVice" value="no" checked> No</label></div></fieldset>
+          <fieldset class="full"><legend>Money laundering involvement?</legend><div class="inline"><label><input type="radio" name="moneyLaundering" value="yes"> Yes</label><label><input type="radio" name="moneyLaundering" value="no" checked> No</label></div></fieldset>
+        </div>
+        <div class="nav"><button type="button" class="back" data-back="security1">Back</button><button type="button" class="next" data-next="security3">Next: Security 3</button></div>
+      </form>
+
+      <!-- Security and Background: Part 3 -->
+      <form id="form-security3" class="form-section" data-section="security3">
+        <h2>Security and Background: Part 3</h2>
+        <div class="grid">
+          <fieldset class="full"><legend>Illegal activity in U.S. (espionage, sabotage, export control violations, etc.)?</legend><div class="inline"><label><input type="radio" name="illegalActivityUS" value="yes"> Yes</label><label><input type="radio" name="illegalActivityUS" value="no" checked> No</label></div></fieldset>
+          <fieldset class="full"><legend>Terrorist activities or support?</legend><div class="inline"><label><input type="radio" name="terroristActivities" value="yes"> Yes</label><label><input type="radio" name="terroristActivities" value="no" checked> No</label></div></fieldset>
+          <fieldset class="full"><legend>Financial assistance or support to terrorists or terrorist organizations?</legend><div class="inline"><label><input type="radio" name="supportTerrorism" value="yes"> Yes</label><label><input type="radio" name="supportTerrorism" value="no" checked> No</label></div></fieldset>
+          <fieldset class="full"><legend>Member or representative of a terrorist organization?</legend><div class="inline"><label><input type="radio" name="memberTerrorOrg" value="yes"> Yes</label><label><input type="radio" name="memberTerrorOrg" value="no" checked> No</label></div></fieldset>
+        </div>
+        <div class="nav"><button type="button" class="back" data-back="security2">Back</button><button type="button" class="next" data-next="security4">Next: Security 4</button></div>
+      </form>
+
+      <!-- Security and Background: Part 4 -->
+      <form id="form-security4" class="form-section" data-section="security4">
+        <h2>Security and Background: Part 4</h2>
+        <div class="grid">
+          <fieldset class="full"><legend>Sought to obtain or assist others to obtain a visa/entry by fraud or misrepresentation?</legend><div class="inline"><label><input type="radio" name="fraudMisrep" value="yes"> Yes</label><label><input type="radio" name="fraudMisrep" value="no" checked> No</label></div></fieldset>
+          <fieldset class="full"><legend>Removed or deported from any country?</legend><div class="inline"><label><input type="radio" name="removedDeported" value="yes"> Yes</label><label><input type="radio" name="removedDeported" value="no" checked> No</label></div></fieldset>
+        </div>
+        <div class="nav"><button type="button" class="back" data-back="security3">Back</button><button type="button" class="next" data-next="security5">Next: Security 5</button></div>
+      </form>
+
+      <!-- Security and Background: Part 5 -->
+      <form id="form-security5" class="form-section" data-section="security5">
+        <h2>Security and Background: Part 5</h2>
+        <div class="grid">
+          <fieldset class="full"><legend>Withheld custody of a U.S. citizen child outside the U.S. from a person granted legal custody by a U.S. court?</legend><div class="inline"><label><input type="radio" name="withheldCustody" value="yes"> Yes</label><label><input type="radio" name="withheldCustody" value="no" checked> No</label></div></fieldset>
+          <fieldset class="full"><legend>Voted in the United States in violation of any law or regulation?</legend><div class="inline"><label><input type="radio" name="votedInUS" value="yes"> Yes</label><label><input type="radio" name="votedInUS" value="no" checked> No</label></div></fieldset>
+          <fieldset class="full"><legend>Renounced U.S. citizenship for the purpose of avoiding taxation?</legend><div class="inline"><label><input type="radio" name="renouncedCitizenshipTax" value="yes"> Yes</label><label><input type="radio" name="renouncedCitizenshipTax" value="no" checked> No</label></div></fieldset>
+        </div>
+        <div class="nav"><button type="button" class="back" data-back="security4">Back</button><button type="button" class="next" data-next="student">Next: Student/SEVIS</button></div>
+      </form>
+
+      <!-- Student/Exchange Visa (SEVIS) -->
+      <form id="form-student" class="form-section" data-section="student">
+        <h2>SEVIS Information</h2>
+        <div class="grid">
+          <label class="full">SEVIS ID<input name="sevisId" placeholder="e.g., N0123456789"></label>
+          <label class="full">Name of School<input name="sevisSchoolName"></label>
+          <label class="full">Course of Study<input name="sevisCourse"></label>
+          <label class="full">Street Address (Line 1)<input name="sevisStreet1"></label>
+          <label class="full">Street Address (Line 2)<input name="sevisStreet2"></label>
+          <label>City<input name="sevisCity"></label>
+          <label>State<select name="sevisState" id="sevisState"></select></label>
+          <label>Postal Zone/ZIP Code<input name="sevisZip"></label>
+        </div>
+        <div class="nav"><button type="button" class="back" data-back="security5">Back</button><button type="button" class="next" data-next="location">Next: Location</button></div>
+      </form>
+
+      <!-- Location -->
+      <form id="form-location" class="form-section" data-section="location">
+        <h2>Location</h2>
+        <div class="grid">
+          <label class="full">Current Location<input name="currentLocation" placeholder="e.g., MUMBAI, INDIA"></label>
+        </div>
+        <div class="nav"><button type="button" class="back" data-back="student">Back</button><button type="button" class="next" data-next="summary">Next: Summary</button></div>
+      </form>
+
+      <!-- Preview -->
+      <section id="section-preview" class="form-section" data-section="preview">
+        <h2>Preview</h2>
+        <p>Review your answers by section. You can export/import JSON at the top.</p>
         <div class="summary-actions">
           <button id="copyJsonBtn" type="button">Copy JSON</button>
           <button id="printBtn" type="button">Print</button>
@@ -270,7 +570,7 @@
 
   <datalist id="countries"></datalist>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=2"></script>
 </body>
 </html>
 
