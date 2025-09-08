@@ -181,18 +181,6 @@
 
   // Top buttons
   document.getElementById('saveBtn').addEventListener('click', save);
-  document.getElementById('exportBtn').addEventListener('click', ()=>{
-    const blob = new Blob([JSON.stringify(collectData(), null, 2)], {type:'application/json'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'ds160-data.json';
-    a.click();
-    URL.revokeObjectURL(a.href);
-  });
-  document.getElementById('copyJsonBtn').addEventListener('click', async ()=>{
-    await navigator.clipboard.writeText(JSON.stringify(collectData(), null, 2));
-    alert('JSON copied to clipboard');
-  });
   document.getElementById('printBtn').addEventListener('click', ()=>{
     window.print();
   });
@@ -240,22 +228,7 @@
   function saveConfirmed(obj){
     localStorage.setItem(CONFIRM_KEY, JSON.stringify(obj||{}));
   }
-  document.getElementById('importInput').addEventListener('change', async (e)=>{
-    const file = e.target.files && e.target.files[0];
-    if(!file) return;
-    const text = await file.text();
-    const data = JSON.parse(text);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    fillForms(data);
-    renderPreview();
-    e.target.value = '';
-  });
-  document.getElementById('resetBtn').addEventListener('click', ()=>{
-    if(confirm('Clear all saved data?')){
-      localStorage.removeItem(STORAGE_KEY);
-      window.location.reload();
-    }
-  });
+  // remove import/reset handlers (no longer shown)
 
   // Initialize
   load();

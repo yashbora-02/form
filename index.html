@@ -11,12 +11,7 @@
     <h1>DS-160 Helper</h1>
     <div class="actions">
       <button id="saveBtn" type="button">Save</button>
-      <button id="exportBtn" type="button">Export JSON</button>
-      <label class="import-label">
-        Import JSON
-        <input id="importInput" type="file" accept="application/json" hidden>
-      </label>
-      <button id="resetBtn" type="button" class="danger">Reset</button>
+      <button id="printBtn" type="button">Print / PDF</button>
     </div>
   </header>
 
@@ -554,10 +549,7 @@
       <section id="section-preview" class="form-section" data-section="preview">
         <h2>Preview</h2>
         <p>Review your answers by section. You can export/import JSON at the top.</p>
-        <div class="summary-actions">
-          <button id="copyJsonBtn" type="button">Copy JSON</button>
-          <button id="printBtn" type="button">Print</button>
-        </div>
+        
         <div id="kvList" class="kv-list"></div>
         <h3 class="full">Raw JSON</h3>
         <pre id="summaryPre" class="summary"></pre>
