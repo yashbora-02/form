@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DS-160 Helper Form</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="app-header">
+    <h1>DS-160 Helper</h1>
+    <div class="actions">
+      <button id="saveBtn" type="button">Save</button>
+      <button id="exportBtn" type="button">Export JSON</button>
+      <label class="import-label">
+        Import JSON
+        <input id="importInput" type="file" accept="application/json" hidden>
+      </label>
+      <button id="resetBtn" type="button" class="danger">Reset</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <nav class="sidebar">
+      <ul>
+        <li><button data-target="personal1" class="nav-btn active">Personal 1</button></li>
+        <li><button data-target="personal2" class="nav-btn">Personal 2</button></li>
+        <li><button data-target="travel" class="nav-btn">Travel</button></li>
+        <li><button data-target="companions" class="nav-btn">Travel Companions</button></li>
+        <li><button data-target="summary" class="nav-btn">Summary</button></li>
+      </ul>
+    </nav>
+
+    <section class="content">
+      <!-- Personal 1 -->
+      <form id="form-personal1" class="form-section active" data-section="personal1">
+        <h2>Personal Information 1</h2>
+        <div class="grid">
+          <label>
+            Surnames
+            <input name="surnames" required>
+          </label>
+          <label>
+            Given Names
+            <input name="givenNames" required>
+          </label>
+          <label class="full">
+            Full Name in Native Alphabet
+            <input name="nativeAlphabetName">
+          </label>
+          <fieldset class="full">
+            <legend>Have you ever used other names?</legend>
+            <div class="inline">
+              <label><input type="radio" name="usedOtherNames" value="yes"> Yes</label>
+              <label><input type="radio" name="usedOtherNames" value="no" checked> No</label>
+            </div>
+          </fieldset>
+          <label>
+            Sex
+            <select name="sex" required>
+              <option value="">- SELECT ONE -</option>
+              <option value="MALE">MALE</option>
+              <option value="FEMALE">FEMALE</option>
+            </select>
+          </label>
+          <label>
+            Marital Status
+            <select name="maritalStatus" required>
+              <option value="">- SELECT ONE -</option>
+              <option>SINGLE</option>
+              <option>MARRIED</option>
+              <option>DIVORCED</option>
+              <option>WIDOWED</option>
+              <option>SEPARATED</option>
+            </select>
+          </label>
+          <fieldset class="full">
+            <legend>Date of Birth</legend>
+            <div class="dob">
+              <label>Day<input name="dobDay" inputmode="numeric" maxlength="2"></label>
+              <label>Month
+                <select name="dobMonth">
+                  <option value="">MM</option>
+                  <option>JAN</option><option>FEB</option><option>MAR</option><option>APR</option>
+                  <option>MAY</option><option>JUN</option><option>JUL</option><option>AUG</option>
+                  <option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option>
+                </select>
+              </label>
+              <label>Year<input name="dobYear" inputmode="numeric" maxlength="4"></label>
+            </div>
+          </fieldset>
+          <label class="full">
+            City of Birth
+            <input name="birthCity">
+          </label>
+          <label>
+            State/Province
+            <input name="birthState">
+          </label>
+          <label>
+            Country/Region of Birth
+            <input name="birthCountry" list="countries">
+          </label>
+        </div>
+        <div class="nav">
+          <button type="button" class="next" data-next="personal2">Next: Personal 2</button>
+        </div>
+      </form>
+
+      <!-- Personal 2 -->
+      <form id="form-personal2" class="form-section" data-section="personal2">
+        <h2>Personal Information 2</h2>
+        <div class="grid">
+          <label>
+            Country/Region of Origin (Nationality)
+            <input name="nationality" list="countries">
+          </label>
+          <fieldset class="full">
+            <legend>Do you hold any other nationality?</legend>
+            <div class="inline">
+              <label><input type="radio" name="otherNationality" value="yes"> Yes</label>
+              <label><input type="radio" name="otherNationality" value="no" checked> No</label>
+            </div>
+          </fieldset>
+          <fieldset class="full">
+            <legend>Are you a permanent resident of another country?</legend>
+            <div class="inline">
+              <label><input type="radio" name="permanentResidentElsewhere" value="yes"> Yes</label>
+              <label><input type="radio" name="permanentResidentElsewhere" value="no" checked> No</label>
+            </div>
+          </fieldset>
+          <label class="full">
+            National Identification Number
+            <input name="nationalId">
+          </label>
+          <label>
+            U.S. Social Security Number
+            <input name="usSsn" placeholder="###-##-####">
+          </label>
+          <label>
+            U.S. Taxpayer ID Number
+            <input name="usTin" placeholder="#########">
+          </label>
+        </div>
+        <div class="nav">
+          <button type="button" class="back" data-back="personal1">Back: Personal 1</button>
+          <button type="button" class="next" data-next="travel">Next: Travel</button>
+        </div>
+      </form>
+
+      <!-- Travel -->
+      <form id="form-travel" class="form-section" data-section="travel">
+        <h2>Travel Information</h2>
+        <div class="grid">
+          <label>
+            Purpose of Trip to the U.S.
+            <select name="purpose">
+              <option value="">- SELECT ONE -</option>
+              <option>ACADEMIC OR LANGUAGE STUDENT (F)</option>
+              <option>BUSINESS/TOURISM (B)</option>
+              <option>WORKER (H)</option>
+            </select>
+          </label>
+          <label>
+            Specify
+            <select name="purposeSpecify">
+              <option value="">- SELECT -</option>
+              <option>STUDENT (F1)</option>
+              <option>BUSINESS & TOURISM (B1/B2)</option>
+            </select>
+          </label>
+          <fieldset class="full">
+            <legend>Have you made specific travel plans?</legend>
+            <div class="inline">
+              <label><input type="radio" name="specificPlans" value="yes"> Yes</label>
+              <label><input type="radio" name="specificPlans" value="no" checked> No</label>
+            </div>
+          </fieldset>
+          <fieldset class="full">
+            <legend>Intended Date of Arrival</legend>
+            <div class="dob">
+              <label>Day<input name="arrivalDay" inputmode="numeric" maxlength="2"></label>
+              <label>Month
+                <select name="arrivalMonth">
+                  <option value="">MM</option>
+                  <option>JAN</option><option>FEB</option><option>MAR</option><option>APR</option>
+                  <option>MAY</option><option>JUN</option><option>JUL</option><option>AUG</option>
+                  <option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option>
+                </select>
+              </label>
+              <label>Year<input name="arrivalYear" inputmode="numeric" maxlength="4"></label>
+            </div>
+          </fieldset>
+          <label>
+            Intended Length of Stay in U.S. (Years)
+            <input name="stayYears" inputmode="numeric" placeholder="e.g., 2">
+          </label>
+
+          <h3 class="full">Address Where You Will Stay in the U.S.</h3>
+          <label class="full">
+            Street Address (Line 1)
+            <input name="usStreet1">
+          </label>
+          <label class="full">
+            Street Address (Line 2)
+            <input name="usStreet2">
+          </label>
+          <label>
+            City
+            <input name="usCity">
+          </label>
+          <label>
+            State
+            <select name="usState" id="usState"></select>
+          </label>
+          <label>
+            ZIP Code
+            <input name="usZip" inputmode="numeric">
+          </label>
+          <label class="full">
+            Person/Entity Paying for Your Trip
+            <select name="payer">
+              <option>SELF</option>
+              <option>OTHER PERSON</option>
+              <option>COMPANY/ORGANIZATION</option>
+            </select>
+          </label>
+        </div>
+        <div class="nav">
+          <button type="button" class="back" data-back="personal2">Back: Personal 2</button>
+          <button type="button" class="next" data-next="companions">Next: Travel Companions</button>
+        </div>
+      </form>
+
+      <!-- Travel Companions -->
+      <form id="form-companions" class="form-section" data-section="companions">
+        <h2>Travel Companions</h2>
+        <div class="grid">
+          <fieldset class="full">
+            <legend>Are there other persons traveling with you?</legend>
+            <div class="inline">
+              <label><input type="radio" name="hasCompanions" value="yes"> Yes</label>
+              <label><input type="radio" name="hasCompanions" value="no" checked> No</label>
+            </div>
+          </fieldset>
+        </div>
+        <div class="nav">
+          <button type="button" class="back" data-back="travel">Back: Travel</button>
+          <button type="button" class="next" data-next="summary">Next: Summary</button>
+        </div>
+      </form>
+
+      <!-- Summary -->
+      <section id="section-summary" class="form-section" data-section="summary">
+        <h2>Summary</h2>
+        <p>Review and quickly copy values. You can also export/import JSON at the top.</p>
+        <div class="summary-actions">
+          <button id="copyJsonBtn" type="button">Copy JSON</button>
+          <button id="printBtn" type="button">Print</button>
+        </div>
+        <div id="kvList" class="kv-list"></div>
+        <h3 class="full">Raw JSON</h3>
+        <pre id="summaryPre" class="summary"></pre>
+        <div class="nav">
+          <button type="button" class="back" data-back="companions">Back</button>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <datalist id="countries"></datalist>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
+
