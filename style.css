@@ -46,6 +46,19 @@ h3{margin:8px 0 0 0}
 .add-row{align-self:flex-start;background:#0369a1}
 .remove-row:hover{background:#7f1d1d}
 .add-row:hover{background:#075985}
-@media (max-width:900px){.container{flex-direction:column}.sidebar{width:100%}.grid{grid-template-columns:1fr}}
+@media (max-width:900px){
+  .container{flex-direction:column;padding:12px}
+  .sidebar{width:100%}
+  .sidebar ul{display:flex;overflow:auto;gap:8px;padding-bottom:8px}
+  .nav-btn{white-space:nowrap}
+  .grid{grid-template-columns:1fr}
+  .kv-row{grid-template-columns:1fr;gap:6px}
+  .kv-actions{justify-content:flex-start}
+}
+
+@media (max-width:600px){
+  .app-header{padding:10px 12px}
+  button,.import-label{padding:8px 10px}
+}
 
 

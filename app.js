@@ -83,6 +83,27 @@
     return data;
   }
 
+  // Prevent browser autofill and provide a way to fully clear inputs
+  forms.forEach(f=>{ f.setAttribute('autocomplete','off'); });
+  document.querySelectorAll('input, select, textarea').forEach(el=>{
+    el.setAttribute('autocomplete','off');
+  });
+
+  function clearForms(){
+    forms.forEach(form=>{
+      Array.from(form.elements).forEach(el=>{
+        if(!el.name) return;
+        if(el.type==='checkbox' || el.type==='radio'){
+          el.checked = false;
+        } else if(el.tagName==='SELECT'){
+          el.selectedIndex = 0;
+        } else {
+          el.value = '';
+        }
+      });
+    });
+  }
+
   // Repeatable rows (Add Another / Remove)
   document.addEventListener('click', (e)=>{
     const addBtn = e.target.closest('.add-row');
@@ -131,11 +152,20 @@
 
   function isFreshMode(){
     const params = new URLSearchParams(location.search);
-    return params.has('fresh') || params.get('mode') === 'fresh' || params.get('blank') === '1';
+    // Default to fresh unless explicitly asked to load
+    const explicitLoad = params.get('load') === '1' || params.get('mode') === 'load';
+    const explicitFresh = params.has('fresh') || params.get('mode') === 'fresh' || params.get('blank') === '1';
+    if(explicitLoad) return false;
+    if(explicitFresh) return true;
+    return true; // default fresh (do not auto-load)
   }
 
   function load(){
-    if(isFreshMode()) return; // skip loading saved answers when sharing fresh links
+    if(isFreshMode()){
+      // Ensure previous browser autofill is removed for shared links
+      clearForms();
+      return; // skip loading saved answers unless ?load=1 is present
+    }
     try{
       const raw = localStorage.getItem(STORAGE_KEY);
       if(!raw) return;
@@ -182,6 +212,18 @@
         if(conf[nm]){ delete conf[nm]; saveConfirmed(conf); }
       }
       save();
+    }
+  });
+
+  // Also clear on page load if browser auto-filled some values despite autocomplete=off
+  window.addEventListener('DOMContentLoaded', ()=>{
+    if(isFreshMode()){
+      const hasAutoFilled = Array.from(document.querySelectorAll('input, select, textarea')).some(el=>{
+        return !!el.value && el.type!=='radio' && el.type!=='checkbox';
+      });
+      if(hasAutoFilled){
+        clearForms();
+      }
     }
   });
 
