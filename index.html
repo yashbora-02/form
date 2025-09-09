@@ -10,8 +10,21 @@
   <header class="app-header">
     <h1>DS-160 Helper</h1>
     <div class="actions">
+      <div id="firebaseStatus" class="firebase-status">🔄 Connecting...</div>
+      <div id="userSection" class="user-section">
+        <div id="userInfo" class="user-info" style="display:none;">
+          <img id="userAvatar" class="user-avatar" />
+          <span id="userName" class="user-name"></span>
+        </div>
+        <div id="authButtons" class="auth-buttons">
+          <button id="signInBtn" type="button">👤 Sign In</button>
+          <button id="anonymousBtn" type="button">🕶️ Anonymous</button>
+        </div>
+        <button id="signOutBtn" type="button" style="display:none;">Sign Out</button>
+      </div>
       <button id="saveBtn" type="button">Save</button>
       <button id="printBtn" type="button">Print / PDF</button>
+      <button id="adminBtn" type="button">Admin Dashboard</button>
     </div>
   </header>
 
@@ -569,12 +582,84 @@
           <button type="button" class="back" data-back="location">Back</button>
         </div>
       </section>
+
+      <!-- Admin Dashboard -->
+      <section id="section-admin" class="form-section" data-section="admin">
+        <div class="admin-header">
+          <h2>🔥 Admin Dashboard</h2>
+          <p>View and manage all form submissions from Firebase.</p>
+          <button id="refreshFormsBtn" type="button" class="refresh-btn">🔄 Refresh</button>
+        </div>
+        
+        <div class="admin-stats" id="adminStats"></div>
+        
+        <div class="admin-controls">
+          <button id="exportAllBtn" type="button">📊 Export All Data</button>
+          <button id="clearAllBtn" type="button" class="danger">🗑️ Clear All Data</button>
+        </div>
+        
+        <div id="adminFormsList" class="admin-forms-list"></div>
+        
+        <div class="nav">
+          <button type="button" class="back" data-back="preview">Back to Preview</button>
+        </div>
+      </section>
     </section>
   </main>
 
   <datalist id="countries"></datalist>
 
-  <script src="app.js?v=2"></script>
+  <!-- Firebase SDK -->
+  <script type="module">
+    // Import Firebase modules
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp, where } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signInAnonymously, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    
+    // Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBFHs0huWH9ABwI-M6Hf1UVqPVDBUoCugw",
+      authDomain: "ds-160-helper.firebaseapp.com",
+      projectId: "ds-160-helper",
+      storageBucket: "ds-160-helper.firebasestorage.app",
+      messagingSenderId: "541191657786",
+      appId: "1:541191657786:web:808e3e7667ece763ac9803"
+    };
+    
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    const googleProvider = new GoogleAuthProvider();
+    
+    // Make Firebase functions globally available
+    window.firebase = {
+      db,
+      auth,
+      googleProvider,
+      collection,
+      addDoc,
+      getDocs,
+      doc,
+      updateDoc,
+      deleteDoc,
+      onSnapshot,
+      query,
+      orderBy,
+      where,
+      serverTimestamp,
+      signInWithPopup,
+      signInAnonymously,
+      signOut,
+      onAuthStateChanged,
+      GoogleAuthProvider
+    };
+    
+    // Dispatch event when Firebase is ready
+    window.dispatchEvent(new CustomEvent('firebaseReady'));
+  </script>
+  
+  <script src="app.js?v=3"></script>
 </body>
 </html>
 
