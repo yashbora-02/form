@@ -70,7 +70,7 @@ This runs live-server on port 8080 and opens index.html automatically.
 **URL Parameters:**
 - `?fresh=1` or `?mode=fresh` - Start with blank form
 - `?load=1` or `?mode=load` - Load saved data
-- Default behavior is fresh mode (blank form)
+- Default behavior is load mode (auto-loads saved data when signed in)
 
 ## Data Storage
 

@@ -8,7 +8,15 @@
 </head>
 <body>
   <header class="app-header">
-    <h1>DS-160 Helper</h1>
+    <div class="app-header-left">
+      <h1>DS-160 Helper</h1>
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div id="progressFill" class="progress-fill"></div>
+        </div>
+        <div id="progressText" class="progress-text">0% Complete</div>
+      </div>
+    </div>
     <div class="actions">
       <div id="firebaseStatus" class="firebase-status">🔄 Connecting...</div>
       <div id="userSection" class="user-section">
@@ -22,13 +30,99 @@
         </div>
         <button id="signOutBtn" type="button" style="display:none;">Sign Out</button>
       </div>
-      <button id="saveBtn" type="button">Save</button>
-      <button id="printBtn" type="button">Print / PDF</button>
-      <button id="adminBtn" type="button">Admin Dashboard</button>
+      <button id="skipToEmptyBtn" type="button" title="Skip to next section with empty fields (Ctrl+E)">⏭️ Next Empty</button>
+      <button id="saveBtn" type="button" title="Save form (Ctrl+S)">Save</button>
+      <div class="export-dropdown">
+        <button id="exportBtn" type="button" title="Export form in various formats">📥 Export ▼</button>
+        <div class="export-menu">
+          <button id="printPdfBtn" type="button">🖨️ Print/PDF</button>
+          <button id="exportJsonBtn" type="button">📄 JSON</button>
+          <button id="exportCsvBtn" type="button">📊 CSV</button>
+          <button id="exportTxtBtn" type="button">📝 Text</button>
+        </div>
+      </div>
+      <button id="resetBtn" type="button">Reset Form</button>
+      <button id="shortcutsBtn" type="button" title="Show keyboard shortcuts">⌨️</button>
     </div>
   </header>
 
-  <main class="container">
+  <!-- Sign-in Page -->
+  <div id="signInPage" class="sign-in-page">
+    <div class="sign-in-container">
+      <div class="sign-in-header">
+        <h1>📝 DS-160 Helper</h1>
+        <p>Your secure companion for completing the DS-160 U.S. visa application form</p>
+      </div>
+      
+      <div class="sign-in-content">
+        <div class="feature-list">
+          <div class="feature-item">
+            <span class="feature-icon">🔒</span>
+            <div>
+              <h3>Secure & Private</h3>
+              <p>Your data is encrypted and stored securely in your personal account</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">💾</span>
+            <div>
+              <h3>Auto-Save</h3>
+              <p>Never lose your progress - everything saves automatically as you type</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">📋</span>
+            <div>
+              <h3>Complete Form</h3>
+              <p>Fill out all 18 sections of the DS-160 form with guided assistance</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">🖨️</span>
+            <div>
+              <h3>Print Ready</h3>
+              <p>Generate clean, professional PDF copies of your completed form</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="sign-in-actions">
+          <h2>Sign in to get started</h2>
+          <p class="sign-in-subtitle">Choose your preferred sign-in method to access your DS-160 form</p>
+          
+          <div class="sign-in-buttons">
+            <button id="googleSignInBtn" class="sign-in-btn primary">
+              <span class="btn-icon">📧</span>
+              <div>
+                <div class="btn-title">Continue with Google</div>
+                <div class="btn-subtitle">Recommended - sync across devices</div>
+              </div>
+            </button>
+            
+            <button id="anonymousSignInBtn" class="sign-in-btn secondary">
+              <span class="btn-icon">🕶️</span>
+              <div>
+                <div class="btn-title">Continue Anonymously</div>
+                <div class="btn-subtitle">No account required - session only</div>
+              </div>
+            </button>
+          </div>
+          
+          <div class="privacy-note">
+            <p>🔐 Your DS-160 data is never shared and remains completely private to your account</p>
+          </div>
+          
+          <div class="admin-access">
+            <button id="adminAccessBtn" class="admin-access-btn">
+              🔧 Admin Dashboard
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main id="mainApp" class="container" style="display: none;">
     <nav class="sidebar">
       <ul>
         <li><button data-target="personal1" class="nav-btn active">Personal 1</button></li>
