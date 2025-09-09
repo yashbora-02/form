@@ -31,10 +31,9 @@
   // Update Firebase status indicator
   function updateFirebaseStatus(message, status = '') {
     const statusEl = document.getElementById('firebaseStatus');
-    if (statusEl) {
-      statusEl.textContent = message;
-      statusEl.className = `firebase-status ${status}`;
-    }
+    if (!statusEl) return; // status element removed from UI
+    statusEl.textContent = message;
+    statusEl.className = `firebase-status ${status}`;
   }
   
   // Admin authorization - only allow specific user
@@ -1084,9 +1083,12 @@
     }
   });
   
-  // Shortcuts help
-  document.getElementById('shortcutsBtn').addEventListener('click', () => {
-    alert(`⌨️ Keyboard Shortcuts:
+  // Shortcuts help (guarded)
+  (function(){
+    const shortcutsBtn = document.getElementById('shortcutsBtn');
+    if (!shortcutsBtn) return;
+    shortcutsBtn.addEventListener('click', () => {
+      alert(`⌨️ Keyboard Shortcuts:
 
 📋 Navigation:
 • ← → Arrow Keys: Navigate between sections
@@ -1098,7 +1100,8 @@
 • Ctrl+E: Skip to next empty section
 
 💡 Use these shortcuts to quickly navigate and manage your DS-160 form!`);
-  });
+    });
+  })();
   
   // Export functionality
   function exportToJSON() {
@@ -1688,4 +1691,13 @@
   applyConditionalLogic();
 })();
 
+
+// Bulb hint toggle
+(function(){
+  const hint = document.querySelector('.shortcut-hint');
+  if(!hint) return;
+  hint.addEventListener('click', ()=>{
+    hint.classList.toggle('active');
+  });
+})();
 
