@@ -255,7 +255,7 @@
         </div>
         <div class="nav">
           <button type="button" class="back" data-back="travel">Back: Travel</button>
-          <button type="button" class="next" data-next="summary">Next: Summary</button>
+          <button type="button" class="next" data-next="addrphone">Next: Address & Phone</button>
         </div>
       </form>
 
@@ -547,14 +547,26 @@
 
       <!-- Preview -->
       <section id="section-preview" class="form-section" data-section="preview">
-        <h2>Preview</h2>
-        <p>Review your answers by section.</p>
+        <div class="preview-header">
+          <h2>📋 Form Preview</h2>
+          <p>Review and confirm your answers by section. Use the "Mark Correct" button to confirm accurate information.</p>
+        </div>
         
-        <div id="kvList" class="kv-list"></div>
-        <h3 class="full">Raw JSON</h3>
-        <pre id="summaryPre" class="summary"></pre>
+        <div class="preview-stats" id="previewStats"></div>
+        
+        <div id="kvList" class="preview-content"></div>
+        
+        <div class="json-section">
+          <details class="json-details">
+            <summary>
+              <h3>🔍 Technical Data (JSON Format)</h3>
+            </summary>
+            <pre id="summaryPre" class="summary"></pre>
+          </details>
+        </div>
+        
         <div class="nav">
-          <button type="button" class="back" data-back="companions">Back</button>
+          <button type="button" class="back" data-back="location">Back</button>
         </div>
       </section>
     </section>

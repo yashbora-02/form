@@ -96,7 +96,7 @@
         if(el.type==='checkbox' || el.type==='radio'){
           el.checked = false;
         } else if(el.tagName==='SELECT'){
-          el.selectedIndex = 0;
+          el.selectedIndex = -1; // This ensures no option is selected
         } else {
           el.value = '';
         }
@@ -113,7 +113,15 @@
       const firstItem = items.querySelector('.item');
       const clone = firstItem.cloneNode(true);
       // clear inputs
-      clone.querySelectorAll('input, select, textarea').forEach(el=>{ if(el.type==='radio' || el.type==='checkbox'){ el.checked=false; } else { el.value=''; } });
+      clone.querySelectorAll('input, select, textarea').forEach(el=>{ 
+        if(el.type==='radio' || el.type==='checkbox'){ 
+          el.checked=false; 
+        } else if(el.tagName==='SELECT'){ 
+          el.selectedIndex = -1; 
+        } else { 
+          el.value=''; 
+        } 
+      });
       items.appendChild(clone);
       save();
     }
@@ -179,9 +187,16 @@
   function renderPreview(){
     const pre = document.getElementById('summaryPre');
     const list = document.getElementById('kvList');
+    const statsDiv = document.getElementById('previewStats');
     const data = collectData();
     pre.textContent = JSON.stringify(data, null, 2);
     const confirmed = loadConfirmed();
+    
+    // Collect all fields and calculate stats
+    let totalFields = 0;
+    let filledFields = 0;
+    let confirmedFields = 0;
+    
     const groups = [];
     sections.forEach(s=>{
       if(s.dataset.section==='preview') return;
@@ -190,13 +205,55 @@
         .filter((v,i,a)=>a.indexOf(v)===i);
       if(fields.length){
         groups.push({ title: s.querySelector('h2')?.textContent || s.dataset.section, fields });
+        totalFields += fields.length;
+        fields.forEach(field => {
+          const val = Array.isArray(data[field]) ? data[field].join(', ') : String(data[field] ?? '');
+          if(val && val.trim() !== '') filledFields++;
+          if(confirmed[field]) confirmedFields++;
+        });
       }
     });
+    
+    // Render stats
+    const emptyFields = totalFields - filledFields;
+    const completionPercent = Math.round((filledFields / totalFields) * 100);
+    const confirmationPercent = Math.round((confirmedFields / filledFields) * 100) || 0;
+    
+    statsDiv.innerHTML = `
+      <div class="stat-card">
+        <div class="stat-number stat-filled">${filledFields}</div>
+        <div class="stat-label">Fields Filled</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number stat-empty">${emptyFields}</div>
+        <div class="stat-label">Fields Empty</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number stat-confirmed">${confirmedFields}</div>
+        <div class="stat-label">Confirmed</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">${completionPercent}%</div>
+        <div class="stat-label">Complete</div>
+      </div>
+    `;
     list.innerHTML = groups.map(g=>{
       const rows = g.fields.map(k=>{
         const val = Array.isArray(data[k]) ? data[k].join(', ') : String(data[k] ?? '');
         const isConfirmed = !!confirmed[k];
-        return `<div class="kv-row" data-key="${k}"><div class="kv-key">${k}</div><div class="kv-val">${val}</div><div class="kv-actions"><button class="btn-correct ${isConfirmed?'btn-confirmed':''}" data-key="${k}">${isConfirmed?'Correct✓':'Correct'}</button><button class="btn-edit" data-key="${k}">Edit</button><button class="copy-one" data-key="${k}">Copy</button></div></div>`;
+        const hasValue = val && val.trim() !== '';
+        const correctButtonText = isConfirmed ? '✓ Confirmed' : 'Mark Correct';
+        const correctButtonClass = isConfirmed ? 'btn-correct btn-confirmed' : 'btn-correct';
+        const correctButton = hasValue ? `<button class="${correctButtonClass}" data-key="${k}">${correctButtonText}</button>` : '';
+        return `<div class="kv-row ${hasValue ? 'has-value' : 'empty-value'}" data-key="${k}">
+          <div class="kv-key">${k}</div>
+          <div class="kv-val">${hasValue ? val : '<span class="empty-text">Not filled</span>'}</div>
+          <div class="kv-actions">
+            ${correctButton}
+            <button class="btn-edit" data-key="${k}">Edit</button>
+            ${hasValue ? `<button class="copy-one" data-key="${k}">Copy</button>` : ''}
+          </div>
+        </div>`;
       }).join('');
       return `<div class="group"><h4>${g.title}</h4><div class="kv-list">${rows}</div></div>`;
     }).join('');
@@ -216,15 +273,26 @@
   });
 
   // Also clear on page load if browser auto-filled some values despite autocomplete=off
-  window.addEventListener('DOMContentLoaded', ()=>{
-    if(isFreshMode()){
-      const hasAutoFilled = Array.from(document.querySelectorAll('input, select, textarea')).some(el=>{
-        return !!el.value && el.type!=='radio' && el.type!=='checkbox';
-      });
-      if(hasAutoFilled){
-        clearForms();
-      }
+  function aggressiveClearAutofill(){
+    if(!isFreshMode()) return;
+    
+    const hasAutoFilled = Array.from(document.querySelectorAll('input, select, textarea')).some(el=>{
+      return (el.value && el.type!=='radio' && el.type!=='checkbox') || 
+             (el.tagName==='SELECT' && el.selectedIndex > 0);
+    });
+    
+    if(hasAutoFilled){
+      clearForms();
     }
+  }
+
+  window.addEventListener('DOMContentLoaded', aggressiveClearAutofill);
+  
+  // Clear multiple times to handle delayed browser autofill
+  window.addEventListener('load', ()=>{
+    setTimeout(aggressiveClearAutofill, 50);
+    setTimeout(aggressiveClearAutofill, 200);
+    setTimeout(aggressiveClearAutofill, 500);
   });
 
   // Top buttons
@@ -252,7 +320,12 @@
     if(correctBtn){
       const key = correctBtn.dataset.key;
       const conf = loadConfirmed();
-      conf[key] = true;
+      // Toggle the confirmed state
+      if(conf[key]){
+        delete conf[key]; // Unconfirm
+      } else {
+        conf[key] = true; // Confirm
+      }
       saveConfirmed(conf);
       renderPreview();
     }
@@ -280,7 +353,7 @@
 
   // Initialize
   load();
-  renderPreview();
+    renderPreview();
 })();
 
 
