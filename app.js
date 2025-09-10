@@ -553,7 +553,6 @@
         
         console.log('✅ User form loaded from Firebase:', currentFormId);
         renderPreview();
-        updateProgress();
       } else {
         console.log('📝 No saved forms found for user');
       }
@@ -653,76 +652,6 @@
     console.log('🔒 Authenticated user - data will be loaded from Firebase');
   }
 
-  function updateProgress() {
-    const data = collectData();
-    const formSections = sections.filter(s => s.dataset.section !== 'preview' && s.dataset.section !== 'admin');
-    
-    let totalFields = 0;
-    let filledFields = 0;
-    
-    formSections.forEach(section => {
-      const fields = Array.from(section.querySelectorAll('[name]'))
-        .map(el => el.name)
-        .filter((v, i, a) => a.indexOf(v) === i);
-      
-      let sectionFilledFields = 0;
-      totalFields += fields.length;
-      fields.forEach(field => {
-        const val = Array.isArray(data[field]) ? data[field].join(', ') : String(data[field] ?? '');
-        if (val && val.trim() !== '') {
-          filledFields++;
-          sectionFilledFields++;
-        }
-      });
-      
-      // Update section completion indicator
-      const sectionId = section.dataset.section;
-      const navBtn = document.querySelector(`.nav-btn[data-target="${sectionId}"]`);
-      if (navBtn) {
-        const sectionPercentage = fields.length > 0 ? Math.round((sectionFilledFields / fields.length) * 100) : 0;
-        
-        // Remove existing status classes
-        navBtn.classList.remove('section-empty', 'section-partial', 'section-complete');
-        
-        // Add new status class
-        if (sectionPercentage === 0) {
-          navBtn.classList.add('section-empty');
-        } else if (sectionPercentage === 100) {
-          navBtn.classList.add('section-complete');
-        } else {
-          navBtn.classList.add('section-partial');
-        }
-        
-        // Update or add completion indicator
-        let indicator = navBtn.querySelector('.completion-indicator');
-        if (!indicator) {
-          // Wrap existing text content in a nav-text span
-          if (!navBtn.querySelector('.nav-text')) {
-            const textContent = navBtn.textContent;
-            navBtn.textContent = '';
-            const textSpan = document.createElement('span');
-            textSpan.className = 'nav-text';
-            textSpan.textContent = textContent;
-            navBtn.appendChild(textSpan);
-          }
-          
-          indicator = document.createElement('span');
-          indicator.className = 'completion-indicator';
-          navBtn.appendChild(indicator);
-        }
-        indicator.textContent = `${sectionPercentage}%`;
-      }
-    });
-    
-    const percentage = Math.round((filledFields / totalFields) * 100);
-    const progressFill = document.getElementById('progressFill');
-    const progressText = document.getElementById('progressText');
-    
-    if (progressFill && progressText) {
-      progressFill.style.width = `${percentage}%`;
-      progressText.textContent = `${percentage}% Complete (${filledFields}/${totalFields} fields)`;
-    }
-  }
 
   function renderPreview(){
     const pre = document.getElementById('summaryPre');
@@ -756,8 +685,6 @@
     
     // Render stats
     const emptyFields = totalFields - filledFields;
-    const completionPercent = Math.round((filledFields / totalFields) * 100);
-    const confirmationPercent = Math.round((confirmedFields / filledFields) * 100) || 0;
     
     statsDiv.innerHTML = `
       <div class="stat-card">
@@ -771,10 +698,6 @@
       <div class="stat-card">
         <div class="stat-number stat-confirmed">${confirmedFields}</div>
         <div class="stat-label">Confirmed</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-number">${completionPercent}%</div>
-        <div class="stat-label">Complete</div>
       </div>
     `;
     list.innerHTML = groups.map(g=>{
@@ -972,7 +895,6 @@
       clearTimeout(autoSaveTimeout);
       autoSaveTimeout = setTimeout(() => {
         save();
-        updateProgress();
       }, 500); // Save 500ms after user stops typing
     }
   });
@@ -1189,28 +1111,31 @@
   }
 
   // Top buttons
-  document.getElementById('skipToEmptyBtn').addEventListener('click', () => {
-    const nextEmptySection = findNextEmptySection();
-    if (nextEmptySection) {
-      showSection(nextEmptySection);
-      
-      // Show feedback
-      const btn = document.getElementById('skipToEmptyBtn');
-      const originalText = btn.textContent;
-      btn.textContent = '✅ Jumped!';
-      setTimeout(() => {
-        btn.textContent = originalText;
-      }, 1500);
-    } else {
-      // All sections complete
-      const btn = document.getElementById('skipToEmptyBtn');
-      const originalText = btn.textContent;
-      btn.textContent = '🎉 All Complete!';
-      setTimeout(() => {
-        btn.textContent = originalText;
-      }, 2000);
-    }
-  });
+  const skipToEmptyBtn = document.getElementById('skipToEmptyBtn');
+  if (skipToEmptyBtn) {
+    skipToEmptyBtn.addEventListener('click', () => {
+      const nextEmptySection = findNextEmptySection();
+      if (nextEmptySection) {
+        showSection(nextEmptySection);
+        
+        // Show feedback
+        const btn = document.getElementById('skipToEmptyBtn');
+        const originalText = btn.textContent;
+        btn.textContent = '✅ Jumped!';
+        setTimeout(() => {
+          btn.textContent = originalText;
+        }, 1500);
+      } else {
+        // All sections complete
+        const btn = document.getElementById('skipToEmptyBtn');
+        const originalText = btn.textContent;
+        btn.textContent = '🎉 All Complete!';
+        setTimeout(() => {
+          btn.textContent = originalText;
+        }, 2000);
+      }
+    });
+  }
   
   // Shortcuts help (guarded)
   (function(){
@@ -1263,6 +1188,7 @@
   
   function exportToText() {
     const data = collectData();
+
     let text = 'DS-160 FORM DATA\n';
     text += '================\n\n';
     
@@ -1293,51 +1219,51 @@
     link.click();
   }
 
-  // Export dropdown functionality
-  document.getElementById('exportBtn').addEventListener('click', (e) => {
-    e.stopPropagation();
-    const dropdown = document.querySelector('.export-dropdown');
-    dropdown.classList.toggle('active');
-  });
-  
-  // Close dropdown when clicking outside
-  document.addEventListener('click', () => {
-    const dropdown = document.querySelector('.export-dropdown');
-    dropdown.classList.remove('active');
-  });
+  // Export PDF functionality - will be set up at the end
 
-  document.getElementById('saveBtn').addEventListener('click', save);
-  document.getElementById('printPdfBtn').addEventListener('click', ()=>{
-    window.print();
-  });
-  document.getElementById('exportJsonBtn').addEventListener('click', exportToJSON);
-  document.getElementById('exportCsvBtn').addEventListener('click', exportToCSV);  
-  document.getElementById('exportTxtBtn').addEventListener('click', exportToText);
+  const saveBtn = document.getElementById('saveBtn');
+  if (saveBtn) saveBtn.addEventListener('click', save);
+  
+  const printPdfBtn = document.getElementById('printPdfBtn');
+  if (printPdfBtn) printPdfBtn.addEventListener('click', ()=>{ window.print(); });
+  
+  const exportJsonBtn = document.getElementById('exportJsonBtn');
+  if (exportJsonBtn) exportJsonBtn.addEventListener('click', exportToJSON);
+  
+  const exportCsvBtn = document.getElementById('exportCsvBtn');
+  if (exportCsvBtn) exportCsvBtn.addEventListener('click', exportToCSV);
+  
+  const exportTxtBtn = document.getElementById('exportTxtBtn');
+  if (exportTxtBtn) exportTxtBtn.addEventListener('click', exportToText);
   
   // Reset button with confirmation
-  document.getElementById('resetBtn').addEventListener('click', ()=>{
-    if (confirm('⚠️ Are you sure you want to reset all form fields?\n\nThis will clear all your entered data and cannot be undone.')) {
-      console.log('🔄 User confirmed form reset');
-      clearForms();
-      renderPreview();
-      updateProgress(); // Update progress indicators after reset
-      
-      // Clear confirmed states as well
-      saveConfirmed({});
-      
-      // Show success message
-      const resetBtn = document.getElementById('resetBtn');
-      const originalText = resetBtn.textContent;
-      resetBtn.textContent = '✅ Reset Complete';
-      resetBtn.disabled = true;
-      
-      setTimeout(() => {
-        resetBtn.textContent = originalText;
-        resetBtn.disabled = false;
-      }, 2000);
-    }
-  });
-  document.getElementById('kvList').addEventListener('click', async (e)=>{
+  const resetBtn = document.getElementById('resetBtn');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', ()=>{
+      if (confirm('⚠️ Are you sure you want to reset all form fields?\n\nThis will clear all your entered data and cannot be undone.')) {
+        console.log('🔄 User confirmed form reset');
+        clearForms();
+        renderPreview();
+        
+        // Clear confirmed states as well
+        saveConfirmed({});
+        
+        // Show success message
+        const resetBtn = document.getElementById('resetBtn');
+        const originalText = resetBtn.textContent;
+        resetBtn.textContent = '✅ Reset Complete';
+        resetBtn.disabled = true;
+        
+        setTimeout(() => {
+          resetBtn.textContent = originalText;
+          resetBtn.disabled = false;
+        }, 2000);
+      }
+    });
+  }
+  const kvList = document.getElementById('kvList');
+  if (kvList) {
+    kvList.addEventListener('click', async (e)=>{
     const copyBtn = e.target.closest('.copy-one');
     const editBtn = e.target.closest('.btn-edit');
     const correctBtn = e.target.closest('.btn-correct');
@@ -1366,7 +1292,8 @@
       saveConfirmed(conf);
       renderPreview();
     }
-  });
+    });
+  }
 
   function findSectionForField(fieldName){
     for(const s of sections){
@@ -1461,10 +1388,19 @@
   }
   
   // Authentication event listeners
-  document.getElementById('signInBtn')?.addEventListener('click', signInWithGoogle);
-  document.getElementById('anonymousBtn')?.addEventListener('click', signInAnonymously);
-  document.getElementById('signOutBtn')?.addEventListener('click', signOutUser);
-  document.getElementById('shareBtn')?.addEventListener('click', shareCurrentForm);
+  const signInBtn = document.getElementById('signInBtn');
+  if (signInBtn) signInBtn.addEventListener('click', signInWithGoogle);
+  
+  const anonymousBtn = document.getElementById('anonymousBtn');
+  if (anonymousBtn) anonymousBtn.addEventListener('click', signInAnonymously);
+  
+  const signOutBtn = document.getElementById('signOutBtn');
+  if (signOutBtn) signOutBtn.addEventListener('click', signOutUser);
+  
+  const shareBtn = document.getElementById('shareBtn');
+  if (shareBtn) shareBtn.addEventListener('click', shareCurrentForm);
+  
+  // User dropdown functionality - will be set up at the end
   
   // Sign-in page event listeners
   document.getElementById('googleSignInBtn')?.addEventListener('click', signInWithGoogle);
@@ -1963,9 +1899,54 @@
 
   load();
   renderPreview();
-  updateProgress();
   addHelpTooltips();
   applyConditionalLogic();
+  
+  // Set up event listeners for elements that might not exist yet
+  function setupEventListeners() {
+    console.log('Setting up event listeners...');
+    
+    // Export PDF functionality
+    const exportBtn = document.getElementById('exportBtn');
+    console.log('Export button found:', !!exportBtn);
+    if (exportBtn) {
+      exportBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        console.log('Export button clicked!');
+        window.print();
+      });
+    }
+    
+    // User dropdown functionality
+    const userInfo = document.getElementById('userInfo');
+    console.log('User info found:', !!userInfo);
+    if (userInfo) {
+      userInfo.addEventListener('click', (e) => {
+        e.stopPropagation();
+        console.log('User info clicked!');
+        const userDropdown = document.querySelector('.user-dropdown');
+        if (userDropdown) {
+          userDropdown.classList.toggle('active');
+          console.log('Dropdown toggled, active:', userDropdown.classList.contains('active'));
+        }
+      });
+    }
+    
+    // Close user dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      const userDropdown = document.querySelector('.user-dropdown');
+      if (userDropdown && !e.target.closest('#userInfo')) {
+        userDropdown.classList.remove('active');
+      }
+    });
+  }
+  
+  // Set up event listeners when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupEventListeners);
+  } else {
+    setupEventListeners();
+  }
 })();
 
 

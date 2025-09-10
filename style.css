@@ -93,9 +93,28 @@ body {
   font-weight: 400;
 }
 
-.app-header .actions {
+.app-header-right {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  gap: 16px;
+}
+
+#exportBtn {
+  background: var(--primary-blue);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  box-shadow: var(--shadow);
+}
+
+#exportBtn:hover {
+  background: var(--primary-blue-hover);
+  box-shadow: var(--shadow-hover);
 }
 button, .import-label {
   background: var(--primary-blue);
@@ -282,6 +301,14 @@ button:active {
   padding: 8px 12px;
   border-radius: 6px;
   border: 1px solid var(--border);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.user-info:hover {
+  background: #e1eaf7;
+  box-shadow: var(--shadow);
 }
 
 .user-avatar {
@@ -296,11 +323,66 @@ button:active {
   font-size: 13px;
   font-weight: 500;
 }
+
+.user-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: var(--shadow-hover);
+  z-index: 1000;
+  min-width: 120px;
+  display: none;
+  overflow: hidden;
+}
+
+.user-dropdown.active {
+  display: block;
+}
+
+.user-dropdown button {
+  width: 100%;
+  background: none;
+  color: var(--text-primary);
+  border: none;
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 13px;
+  border-radius: 0;
+  box-shadow: none;
+  min-height: auto;
+  justify-content: flex-start;
+}
+
+.user-dropdown button:hover {
+  background: var(--background);
+  box-shadow: none;
+}
 .auth-buttons{display:flex;gap:8px}
 #signInBtn{background:linear-gradient(135deg, #4285f4 0%, #34a853 100%);color:white;font-size:12px;padding:8px 12px}
 #signInBtn:hover{background:linear-gradient(135deg, #3367d6 0%, #137333 100%)}
 #signOutBtn{background:rgba(220,38,38,0.8);color:white;font-size:12px;padding:8px 12px}
 #signOutBtn:hover{background:rgba(185,28,28,0.9)}
+
+.user-dropdown #signOutBtn {
+  background: none;
+  color: var(--error);
+  font-size: 13px;
+  padding: 10px 16px;
+  text-align: left;
+  border-radius: 0;
+  box-shadow: none;
+  min-height: auto;
+  justify-content: flex-start;
+}
+
+.user-dropdown #signOutBtn:hover {
+  background: var(--error-light);
+  color: var(--error);
+  box-shadow: none;
+}
 #shareBtn{background:linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);color:white}
 #shareBtn:hover{background:linear-gradient(135deg, #0891b2 0%, #0e7490 100%)}
 

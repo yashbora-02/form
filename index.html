@@ -13,36 +13,21 @@
   <header class="app-header">
     <div class="app-header-left">
       <h1>DS-160 Intake Form</h1>
-      <div class="progress-container">
-        <div class="progress-bar">
-          <div id="progressFill" class="progress-fill"></div>
-        </div>
-        <div id="progressText" class="progress-text">0% Complete</div>
-      </div>
     </div>
-    <div class="actions">
+    <div class="app-header-right">
+      <button id="exportBtn" type="button" title="Export as PDF">Export PDF</button>
       <div id="userSection" class="user-section">
         <div id="userInfo" class="user-info" style="display:none;">
           <img id="userAvatar" class="user-avatar" />
           <span id="userName" class="user-name"></span>
+          <div class="user-dropdown">
+            <button id="signOutBtn" type="button" style="display:none;">Sign Out</button>
+          </div>
         </div>
         <div id="authButtons" class="auth-buttons">
           <button id="signInBtn" type="button">Sign In</button>
         </div>
-        <button id="signOutBtn" type="button" style="display:none;">Sign Out</button>
       </div>
-      <button id="skipToEmptyBtn" type="button" title="Skip to next section with empty fields (Ctrl+E)">Next Empty</button>
-      <button id="saveBtn" type="button" title="Save form (Ctrl+S)">Save</button>
-      <div class="export-dropdown">
-        <button id="exportBtn" type="button" title="Export form in various formats">Export ▼</button>
-        <div class="export-menu">
-          <button id="printPdfBtn" type="button">Print/PDF</button>
-          <button id="exportJsonBtn" type="button">JSON</button>
-          <button id="exportCsvBtn" type="button">CSV</button>
-          <button id="exportTxtBtn" type="button">Text</button>
-        </div>
-      </div>
-      <button id="resetBtn" type="button">Reset Form</button>
     </div>
   </header>
 
