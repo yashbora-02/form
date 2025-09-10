@@ -98,24 +98,10 @@
       
       // Handle specific error cases
       let errorMessage = 'Sign in failed. Please try again.';
-      if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
-        // Try to create the account instead
-        console.log('🔍 User not found or invalid credential, attempting to create account...');
-        try {
-          const createResult = await window.firebase.createUserWithEmailAndPassword(window.firebase.auth, email, password);
-          console.log('✅ Account created and signed in:', createResult.user.email);
-          return;
-        } catch (createError) {
-          console.error('❌ Account creation error:', createError);
-          console.error('❌ Create error code:', createError.code);
-          console.error('❌ Create error message:', createError.message);
-          
-          if (createError.code === 'auth/email-already-in-use') {
-            errorMessage = 'Account exists but wrong password. Please check your password.';
-          } else {
-            errorMessage = `Could not create account: ${createError.message}`;
-          }
-        }
+      if (error.code === 'auth/user-not-found') {
+        errorMessage = 'No account found with this email. Please create an account first or check your email address.';
+      } else if (error.code === 'auth/invalid-credential') {
+        errorMessage = 'Invalid email or password. Please check your credentials and try again.';
       } else if (error.code === 'auth/wrong-password') {
         errorMessage = 'Incorrect password. Please try again.';
       } else if (error.code === 'auth/invalid-email') {
@@ -124,6 +110,82 @@
         errorMessage = 'Password should be at least 6 characters.';
       } else {
         errorMessage = `Sign in failed: ${error.message}`;
+      }
+      
+      alert(errorMessage);
+    }
+  }
+
+  async function createNewAccount(email, password) {
+    console.log('🔍 Attempting to create new account for:', email);
+    
+    if (!firebaseReady) {
+      alert('Please wait for Firebase to initialize and try again.');
+      return;
+    }
+    
+    try {
+      const result = await window.firebase.createUserWithEmailAndPassword(window.firebase.auth, email, password);
+      console.log('✅ Account created and signed in:', result.user.email);
+      alert(`✅ Account Created Successfully!\n\nWelcome! Your account has been created and you're now signed in.\n\nYou can now start filling out your DS-160 form.`);
+    } catch (error) {
+      console.error('❌ Account creation error:', error);
+      console.error('❌ Error code:', error.code);
+      console.error('❌ Error message:', error.message);
+      
+      let errorMessage = 'Failed to create account.';
+      if (error.code === 'auth/email-already-in-use') {
+        errorMessage = 'An account with this email already exists. Please sign in instead or use a different email address.';
+      } else if (error.code === 'auth/weak-password') {
+        errorMessage = 'Password is too weak. Please use at least 6 characters with a mix of letters and numbers.';
+      } else if (error.code === 'auth/invalid-email') {
+        errorMessage = 'Please enter a valid email address.';
+      } else {
+        errorMessage = `Account creation failed: ${error.message}`;
+      }
+      
+      alert(errorMessage);
+    }
+  }
+
+  async function resetPassword(email) {
+    console.log('🔍 Attempting password reset for:', email);
+    
+    if (!firebaseReady) {
+      alert('Please wait for Firebase to initialize and try again.');
+      return;
+    }
+    
+    if (!email) {
+      alert('Please enter your email address first.');
+      return;
+    }
+    
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+    
+    try {
+      await window.firebase.sendPasswordResetEmail(window.firebase.auth, email);
+      console.log('✅ Password reset email sent to:', email);
+      alert(`✅ Password Reset Email Sent!\n\nWe've sent a password reset link to ${email}.\n\nPlease check your email (including spam folder) and click the link to reset your password.`);
+    } catch (error) {
+      console.error('❌ Password reset error:', error);
+      console.error('❌ Error code:', error.code);
+      console.error('❌ Error message:', error.message);
+      
+      let errorMessage = 'Failed to send password reset email.';
+      if (error.code === 'auth/user-not-found') {
+        errorMessage = 'No account found with this email address. Please check your email or create a new account.';
+      } else if (error.code === 'auth/invalid-email') {
+        errorMessage = 'Please enter a valid email address.';
+      } else if (error.code === 'auth/too-many-requests') {
+        errorMessage = 'Too many password reset requests. Please wait a few minutes before trying again.';
+      } else {
+        errorMessage = `Password reset failed: ${error.message}`;
       }
       
       alert(errorMessage);
@@ -1408,21 +1470,37 @@
   document.getElementById('googleSignInBtn')?.addEventListener('click', signInWithGoogle);
   document.getElementById('anonymousSignInBtn')?.addEventListener('click', signInAnonymously);
   
+  // Tab switching functionality
+  document.getElementById('signInTab')?.addEventListener('click', () => {
+    // Switch tabs
+    document.getElementById('signInTab').classList.add('active');
+    document.getElementById('createAccountTab').classList.remove('active');
+    
+    // Switch forms
+    document.getElementById('emailSignInForm').classList.add('active');
+    document.getElementById('emailCreateForm').classList.remove('active');
+  });
+  
+  document.getElementById('createAccountTab')?.addEventListener('click', () => {
+    // Switch tabs
+    document.getElementById('createAccountTab').classList.add('active');
+    document.getElementById('signInTab').classList.remove('active');
+    
+    // Switch forms
+    document.getElementById('emailCreateForm').classList.add('active');
+    document.getElementById('emailSignInForm').classList.remove('active');
+  });
+
   // Email sign-in form handler
   document.getElementById('emailSignInForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const email = document.getElementById('emailInput').value.trim();
-    const password = document.getElementById('passwordInput').value;
+    const email = document.getElementById('signInEmailInput').value.trim();
+    const password = document.getElementById('signInPasswordInput').value;
     
-    console.log('📝 Form submitted with email:', email, 'password length:', password.length);
+    console.log('📝 Sign-in form submitted with email:', email, 'password length:', password.length);
     
     if (!email || !password) {
       alert('Please enter both email and password.');
-      return;
-    }
-    
-    if (password.length < 6) {
-      alert('Password must be at least 6 characters long.');
       return;
     }
     
@@ -1434,6 +1512,56 @@
     }
     
     await signInWithEmail(email, password);
+  });
+  
+  // Email create account form handler
+  document.getElementById('emailCreateForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('createEmailInput').value.trim();
+    const password = document.getElementById('createPasswordInput').value;
+    const confirmPassword = document.getElementById('confirmPasswordInput').value;
+    
+    console.log('📝 Create account form submitted with email:', email, 'password length:', password.length);
+    
+    if (!email || !password || !confirmPassword) {
+      alert('Please fill in all fields.');
+      return;
+    }
+    
+    if (password.length < 6) {
+      alert('Password must be at least 6 characters long.');
+      return;
+    }
+    
+    if (password !== confirmPassword) {
+      alert('Passwords do not match. Please try again.');
+      return;
+    }
+    
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+    
+    await createNewAccount(email, password);
+  });
+  
+  // Forgot password handler
+  document.getElementById('forgotPasswordBtn')?.addEventListener('click', async () => {
+    const email = document.getElementById('signInEmailInput').value.trim();
+    
+    if (!email) {
+      alert('Please enter your email address first, then click "Forgot Password?"');
+      document.getElementById('signInEmailInput').focus();
+      return;
+    }
+    
+    const confirmed = confirm(`Send password reset email to:\n${email}\n\nAre you sure?`);
+    if (confirmed) {
+      await resetPassword(email);
+    }
   });
   
   // Admin access from sign-in page

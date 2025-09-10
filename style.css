@@ -1768,6 +1768,7 @@ h3 {
   position: relative;
   text-align: center;
   margin: 24px 0;
+  z-index: 1;
 }
 
 .signin-divider::before {
@@ -1778,14 +1779,18 @@ h3 {
   right: 0;
   height: 1px;
   background: #e2e8f0;
+  z-index: 1;
 }
 
 .signin-divider span {
+  position: relative;
   background: white;
   padding: 0 16px;
   color: #64748b;
   font-size: 14px;
   font-weight: 500;
+  z-index: 2;
+  display: inline-block;
 }
 
 .email-signin-form {
@@ -1805,6 +1810,69 @@ h3 {
   font-size: 12px;
   margin-top: 4px;
   line-height: 1.4;
+}
+
+.forgot-password-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.forgot-password-link {
+  background: none;
+  border: none;
+  color: var(--primary-blue);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 4px 0;
+  text-decoration: underline;
+  font-family: inherit;
+}
+
+.forgot-password-link:hover {
+  color: var(--primary-blue-hover);
+  text-decoration: none;
+  background: none;
+}
+
+.email-auth-tabs {
+  display: flex;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  padding: 4px;
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 10px 16px;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--text-secondary);
+}
+
+.auth-tab.active {
+  background: white;
+  color: var(--primary-blue);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.auth-tab:hover:not(.active) {
+  background: rgba(255, 255, 255, 0.6);
+  color: var(--text-primary);
+}
+
+.auth-form {
+  display: none;
+}
+
+.auth-form.active {
+  display: block;
 }
 
 .email-signin-form input {
@@ -1959,6 +2027,24 @@ body:has(.sign-in-page:not([style*="display: none"])) .app-header {
   .password-help {
     font-size: 11px;
   }
+  
+  .email-auth-tabs {
+    margin-bottom: 16px;
+  }
+  
+  .auth-tab {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+  
+  .signin-divider {
+    margin: 20px 0;
+  }
+  
+  .signin-divider span {
+    padding: 0 12px;
+    font-size: 13px;
+  }
 }
 
 /* Extra small mobile devices */
@@ -2027,6 +2113,24 @@ body:has(.sign-in-page:not([style*="display: none"])) .app-header {
   .email-signin-form input {
     padding: 14px;
     font-size: 16px;
+  }
+  
+  .signin-divider {
+    margin: 16px 0;
+  }
+  
+  .signin-divider span {
+    padding: 0 10px;
+    font-size: 12px;
+  }
+  
+  .email-auth-tabs {
+    margin-bottom: 12px;
+  }
+  
+  .auth-tab {
+    padding: 6px 8px;
+    font-size: 12px;
   }
 }
 
