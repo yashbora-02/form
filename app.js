@@ -78,6 +78,58 @@
     }
   }
   
+  async function signInWithEmail(email, password) {
+    console.log('🔍 Attempting email sign in for:', email);
+    console.log('🔥 Firebase ready:', firebaseReady);
+    console.log('🔥 Firebase auth:', window.firebase?.auth);
+    
+    if (!firebaseReady) {
+      alert('Please wait for Firebase to initialize and try again.');
+      return;
+    }
+    
+    try {
+      const result = await window.firebase.signInWithEmailAndPassword(window.firebase.auth, email, password);
+      console.log('✅ Email sign in successful:', result.user.email);
+    } catch (error) {
+      console.error('❌ Email sign in error:', error);
+      console.error('❌ Error code:', error.code);
+      console.error('❌ Error message:', error.message);
+      
+      // Handle specific error cases
+      let errorMessage = 'Sign in failed. Please try again.';
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/invalid-credential') {
+        // Try to create the account instead
+        console.log('🔍 User not found or invalid credential, attempting to create account...');
+        try {
+          const createResult = await window.firebase.createUserWithEmailAndPassword(window.firebase.auth, email, password);
+          console.log('✅ Account created and signed in:', createResult.user.email);
+          return;
+        } catch (createError) {
+          console.error('❌ Account creation error:', createError);
+          console.error('❌ Create error code:', createError.code);
+          console.error('❌ Create error message:', createError.message);
+          
+          if (createError.code === 'auth/email-already-in-use') {
+            errorMessage = 'Account exists but wrong password. Please check your password.';
+          } else {
+            errorMessage = `Could not create account: ${createError.message}`;
+          }
+        }
+      } else if (error.code === 'auth/wrong-password') {
+        errorMessage = 'Incorrect password. Please try again.';
+      } else if (error.code === 'auth/invalid-email') {
+        errorMessage = 'Please enter a valid email address.';
+      } else if (error.code === 'auth/weak-password') {
+        errorMessage = 'Password should be at least 6 characters.';
+      } else {
+        errorMessage = `Sign in failed: ${error.message}`;
+      }
+      
+      alert(errorMessage);
+    }
+  }
+
   async function signOutUser() {
     try {
       await window.firebase.signOut(window.firebase.auth);
@@ -121,7 +173,7 @@
             userAvatar.style.display = 'none';
           }
           
-          userName.textContent = user.displayName || `Anonymous User`;
+          userName.textContent = user.displayName || user.email || `Anonymous User`;
           
           // Navigate to admin section
           setTimeout(() => {
@@ -160,7 +212,12 @@
         userAvatar.style.display = 'none';
       }
       
-      userName.textContent = user.displayName || `Anonymous User`;
+      console.log('🔍 User object for display:', {
+        displayName: user.displayName,
+        email: user.email,
+        uid: user.uid
+      });
+      userName.textContent = user.displayName || user.email || `Anonymous User`;
     } else {
       // User is signed out - show sign-in page
       console.log('🔒 User not authenticated - showing sign-in page');
@@ -1351,6 +1408,34 @@
   document.getElementById('googleSignInBtn')?.addEventListener('click', signInWithGoogle);
   document.getElementById('anonymousSignInBtn')?.addEventListener('click', signInAnonymously);
   
+  // Email sign-in form handler
+  document.getElementById('emailSignInForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const email = document.getElementById('emailInput').value.trim();
+    const password = document.getElementById('passwordInput').value;
+    
+    console.log('📝 Form submitted with email:', email, 'password length:', password.length);
+    
+    if (!email || !password) {
+      alert('Please enter both email and password.');
+      return;
+    }
+    
+    if (password.length < 6) {
+      alert('Password must be at least 6 characters long.');
+      return;
+    }
+    
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+    
+    await signInWithEmail(email, password);
+  });
+  
   // Admin access from sign-in page
   document.getElementById('adminAccessBtn')?.addEventListener('click', async () => {
     // Check if Firebase is ready first
@@ -1736,6 +1821,16 @@
         }
       });
     }
+  };
+  
+  // Special handler for Previous Work/Education section
+  window.togglePreviousWorkEducation = function() {
+    const prevEmployed = document.querySelector('input[name="prevEmployed"]:checked')?.value === 'yes';
+    const attendedSecondary = document.querySelector('input[name="attendedSecondary"]:checked')?.value === 'yes';
+    
+    // Show container if either question is answered "yes"
+    const shouldShow = prevEmployed || attendedSecondary;
+    toggleConditionalField('previousWorkEducationContainer', shouldShow);
   };
 
   load();
