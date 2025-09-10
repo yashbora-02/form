@@ -1310,20 +1310,230 @@ h3 {
 
 @media (max-width: 600px) {
   .app-header {
-    padding: 12px 16px;
+    padding: 8px 12px;
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
   }
   
-  button, .import-label {
-    padding: 10px 16px;
-    font-size: 13px;
+  .app-header-left {
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
   }
   
   .app-header h1 {
     font-size: 18px;
+    text-align: center;
+  }
+  
+  .progress-container {
+    align-items: center;
   }
   
   .progress-bar {
-    width: 180px;
+    width: 200px;
+  }
+  
+  .progress-text {
+    font-size: 12px;
+    text-align: center;
+  }
+  
+  .actions {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+  }
+  
+  .user-section {
+    order: -1;
+    align-self: center;
+  }
+  
+  .user-info {
+    font-size: 14px;
+  }
+  
+  .user-name {
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  button, .import-label {
+    padding: 8px 12px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+  
+  .export-dropdown .export-menu {
+    right: 0;
+    left: auto;
+    min-width: 120px;
+  }
+  
+  /* Stack sidebar navigation horizontally on mobile */
+  .sidebar ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  
+  .sidebar ul li {
+    flex: 1;
+    min-width: 120px;
+  }
+  
+  .sidebar .nav-btn {
+    padding: 8px 4px;
+    font-size: 11px;
+    text-align: center;
+  }
+  
+  /* Form improvements for mobile */
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .dob {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .dob label {
+    flex: 1;
+  }
+  
+  input, select, textarea {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+  
+  .inline {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .nav {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .nav button {
+    width: 100%;
+  }
+  
+  /* Better touch targets for mobile */
+  .repeat .add-row,
+  .repeat .remove-row {
+    padding: 12px 16px;
+    font-size: 14px;
+    min-height: 44px;
+  }
+  
+  /* Conditional containers */
+  .conditional-container {
+    padding: 12px;
+    margin-top: 12px;
+  }
+  
+  /* Preview section mobile improvements */
+  .kv-section {
+    margin-bottom: 20px;
+  }
+  
+  .kv-section h3 {
+    font-size: 16px;
+    padding: 8px 0;
+  }
+  
+  .kv-item {
+    padding: 8px 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .kv-key {
+    font-size: 13px;
+    min-width: auto;
+  }
+  
+  .kv-value {
+    font-size: 14px;
+    word-break: break-word;
+  }
+  
+  .kv-actions {
+    margin-top: 8px;
+  }
+  
+  .copy-one {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+  
+  /* Form field improvements */
+  fieldset {
+    padding: 12px;
+  }
+  
+  legend {
+    font-size: 14px;
+    padding: 0 8px;
+  }
+  
+  /* Radio button and checkbox improvements */
+  .inline label {
+    padding: 8px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  input[type="radio"],
+  input[type="checkbox"] {
+    min-width: 18px;
+    min-height: 18px;
+  }
+  
+  /* Dropdown improvements */
+  .export-dropdown {
+    position: relative;
+  }
+  
+  .export-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: var(--shadow-hover);
+    z-index: 1000;
+    min-width: 140px;
+  }
+  
+  .export-menu button {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    padding: 12px 16px;
+    font-size: 14px;
+    color: var(--text-primary);
+  }
+  
+  .export-menu button:hover {
+    background: var(--background);
+  }
+  
+  /* Hide keyboard shortcuts on mobile */
+  .shortcut-hint {
+    display: none;
   }
 }
 
@@ -1715,6 +1925,108 @@ body:has(.sign-in-page:not([style*="display: none"])) .app-header {
   
   .feature-item {
     margin-bottom: 20px;
+  }
+  
+  .sign-in-container {
+    max-width: 100%;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+    min-height: 100vh;
+  }
+  
+  .sign-in-page {
+    padding: 15px;
+  }
+  
+  .sign-in-btn {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+  
+  .btn-title {
+    font-size: 14px;
+  }
+  
+  .btn-subtitle {
+    font-size: 12px;
+  }
+  
+  .email-signin-form input {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+  
+  .password-help {
+    font-size: 11px;
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 480px) {
+  .sign-in-page {
+    padding: 10px;
+  }
+  
+  .sign-in-header {
+    padding: 20px 15px;
+    text-align: center;
+  }
+  
+  .sign-in-header h1 {
+    font-size: 22px;
+  }
+  
+  .sign-in-header p {
+    font-size: 14px;
+  }
+  
+  .sign-in-actions {
+    padding: 20px 15px;
+  }
+  
+  .feature-list {
+    padding: 20px 15px;
+  }
+  
+  .feature-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 8px;
+  }
+  
+  .feature-icon {
+    font-size: 28px;
+    align-self: center;
+  }
+  
+  .sign-in-btn {
+    padding: 16px;
+    flex-direction: row;
+    text-align: left;
+    gap: 12px;
+  }
+  
+  .btn-icon {
+    font-size: 18px;
+    min-width: 24px;
+  }
+  
+  .btn-title {
+    font-size: 15px;
+    margin-bottom: 2px;
+  }
+  
+  .btn-subtitle {
+    font-size: 12px;
+  }
+  
+  .email-signin-form {
+    gap: 12px;
+  }
+  
+  .email-signin-form input {
+    padding: 14px;
+    font-size: 16px;
   }
 }
 
