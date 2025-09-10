@@ -1714,6 +1714,30 @@
     console.log('🔥 Firebase initialization complete');
   });
   
+  // Conditional field toggling function
+  window.toggleConditionalField = function(containerId, show) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    
+    if (show) {
+      container.style.display = 'block';
+      container.classList.add('show');
+      container.classList.remove('hide');
+    } else {
+      container.style.display = 'none';
+      container.classList.add('hide');
+      container.classList.remove('show');
+      // Clear inputs in hidden container
+      container.querySelectorAll('input, select, textarea').forEach(el => {
+        if (el.type === 'radio' || el.type === 'checkbox') {
+          el.checked = false;
+        } else {
+          el.value = '';
+        }
+      });
+    }
+  };
+
   load();
   renderPreview();
   updateProgress();

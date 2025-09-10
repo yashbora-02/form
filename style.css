@@ -299,8 +299,6 @@ button:active {
 .auth-buttons{display:flex;gap:8px}
 #signInBtn{background:linear-gradient(135deg, #4285f4 0%, #34a853 100%);color:white;font-size:12px;padding:8px 12px}
 #signInBtn:hover{background:linear-gradient(135deg, #3367d6 0%, #137333 100%)}
-#anonymousBtn{background:linear-gradient(135deg, #6b7280 0%, #4b5563 100%);color:white;font-size:12px;padding:8px 12px}
-#anonymousBtn:hover{background:linear-gradient(135deg, #4b5563 0%, #374151 100%)}
 #signOutBtn{background:rgba(220,38,38,0.8);color:white;font-size:12px;padding:8px 12px}
 #signOutBtn:hover{background:rgba(185,28,28,0.9)}
 #shareBtn{background:linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);color:white}
@@ -1181,197 +1179,6 @@ h3 {
   margin-right: 4px;
 }
 
-/* Admin Dashboard Styles */
-.admin-header {
-  margin-bottom: 32px;
-  text-align: center;
-  padding: 24px;
-  background: var(--warning-light);
-  border-radius: 8px;
-  border: 1px solid var(--warning);
-  position: relative;
-}
-
-.admin-header h2 {
-  color: var(--warning);
-  margin-bottom: 12px;
-  font-size: 24px;
-  font-weight: 400;
-}
-
-.admin-header p {
-  color: var(--text-secondary);
-  margin: 0;
-  font-size: 14px;
-}
-
-.refresh-btn {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: var(--warning);
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  font-size: 12px;
-  cursor: pointer;
-  min-height: auto;
-}
-
-.refresh-btn:hover {
-  background: #e09900;
-}
-.admin-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
-  margin-bottom: 32px;
-}
-
-.admin-stat-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 24px;
-  text-align: center;
-  box-shadow: var(--shadow);
-}
-
-.admin-stat-card .stat-number {
-  font-size: 32px;
-  font-weight: 500;
-  color: var(--warning);
-  margin-bottom: 8px;
-  font-family: 'Google Sans', sans-serif;
-}
-
-.admin-stat-card .stat-label {
-  font-size: 14px;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-weight: 500;
-}
-
-.admin-controls {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 32px;
-  justify-content: center;
-}
-.admin-controls button {
-  padding: 12px 20px;
-  border-radius: 4px;
-  font-weight: 500;
-  border: none;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  min-height: 40px;
-}
-
-#exportAllBtn {
-  background: var(--success);
-  color: white;
-}
-
-#exportAllBtn:hover {
-  background: #0d652d;
-  transform: translateY(-2px);
-}
-
-.admin-forms-list {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.admin-form-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: var(--shadow);
-  transition: transform 0.2s ease;
-}
-.admin-form-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-hover);
-}
-
-.form-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.form-header h4 {
-  margin: 0;
-  color: var(--text-primary);
-  font-size: 16px;
-  font-weight: 500;
-}
-
-.form-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.view-form {
-  background: var(--primary-blue);
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  font-size: 12px;
-  cursor: pointer;
-  min-height: auto;
-}
-
-.view-form:hover {
-  background: var(--primary-blue-hover);
-}
-
-.delete-form {
-  background: var(--error);
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  font-size: 12px;
-  cursor: pointer;
-  min-height: auto;
-}
-
-.delete-form:hover {
-  background: #b52d20;
-}
-.form-details {
-  display: flex;
-  gap: 16px;
-  color: var(--text-secondary);
-  font-size: 13px;
-}
-
-.form-details span {
-  background: var(--border);
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-weight: 500;
-}
-
-.no-forms {
-  text-align: center;
-  padding: 48px 24px;
-  color: var(--text-secondary);
-}
-
-.no-forms h3 {
-  color: var(--text-primary);
-  margin-bottom: 12px;
-  font-weight: 500;
-}
 @media (max-width: 900px) {
   .container {
     flex-direction: column;
@@ -1742,6 +1549,118 @@ h3 {
   font-weight: 400;
 }
 
+/* Email Sign-in Styles */
+.email-signin-section {
+  margin-top: 20px;
+}
+
+.signin-divider {
+  position: relative;
+  text-align: center;
+  margin: 24px 0;
+}
+
+.signin-divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #e2e8f0;
+}
+
+.signin-divider span {
+  background: white;
+  padding: 0 16px;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.email-signin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.email-signin-form input {
+  padding: 14px 16px;
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: inherit;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.email-signin-form input:focus {
+  outline: none;
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+}
+
+.email-signin-form input::placeholder {
+  color: #94a3b8;
+}
+
+.email-btn {
+  margin-top: 8px;
+}
+
+.auth-toggle {
+  text-align: center;
+  margin-top: 16px;
+}
+
+.auth-toggle p {
+  margin: 0;
+  font-size: 14px;
+  color: #64748b;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: var(--primary-blue);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  margin: 0;
+  font-family: inherit;
+}
+
+.link-btn:hover {
+  color: var(--primary-blue-hover);
+  text-decoration: none;
+}
+
+/* Conditional Field Styles */
+.conditional-container {
+  margin-top: 16px;
+  padding: 16px;
+  background: var(--primary-blue-light);
+  border-radius: 6px;
+  border-left: 4px solid var(--primary-blue);
+  transition: all 0.3s ease;
+}
+
+.conditional-container.show {
+  display: block !important;
+}
+
+.conditional-container.hide {
+  display: none !important;
+}
+
 .privacy-note {
   text-align: center;
   padding: 16px;
@@ -1757,29 +1676,6 @@ h3 {
   line-height: 1.4;
 }
 
-.admin-access {
-  margin-top: 16px;
-  text-align: center;
-}
-
-.admin-access-btn {
-  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 6px rgba(234,88,12,0.2);
-}
-
-.admin-access-btn:hover {
-  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-  transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgba(234,88,12,0.3);
-}
 
 /* Hide app header when sign-in page is visible */
 body:has(.sign-in-page:not([style*="display: none"])) .app-header {
@@ -1966,11 +1862,6 @@ body:has(.sign-in-page:not([style*="display: none"])) .app-header {
   
   /* Preview section special handling */
   .form-section[data-section="preview"] {
-    display: none !important;
-  }
-  
-  /* Admin section - hide completely */
-  .form-section[data-section="admin"] {
     display: none !important;
   }
   

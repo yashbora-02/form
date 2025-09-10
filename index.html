@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DS-160 Helper Form</title>
+  <title>DS-160 Intake Form</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
@@ -12,7 +12,7 @@
 <body>
   <header class="app-header">
     <div class="app-header-left">
-      <h1>DS-160 Helper</h1>
+      <h1>DS-160 Intake Form</h1>
       <div class="progress-container">
         <div class="progress-bar">
           <div id="progressFill" class="progress-fill"></div>
@@ -28,7 +28,6 @@
         </div>
         <div id="authButtons" class="auth-buttons">
           <button id="signInBtn" type="button">Sign In</button>
-          <button id="anonymousBtn" type="button">Anonymous</button>
         </div>
         <button id="signOutBtn" type="button" style="display:none;">Sign Out</button>
       </div>
@@ -51,7 +50,7 @@
   <div id="signInPage" class="sign-in-page">
     <div class="sign-in-container">
       <div class="sign-in-header">
-        <h1>DS-160 Helper</h1>
+        <h1>DS-160 Intake Form</h1>
         <p>Your secure companion for completing the DS-160 U.S. visa application form</p>
       </div>
       
@@ -100,23 +99,31 @@
               </div>
             </button>
             
-            <button id="anonymousSignInBtn" class="sign-in-btn secondary">
-              <span class="btn-icon">A</span>
-              <div>
-                <div class="btn-title">Continue Anonymously</div>
-                <div class="btn-subtitle">No account required - session only</div>
+            <div class="email-signin-section">
+              <div class="signin-divider">
+                <span>or</span>
               </div>
-            </button>
+              
+              <form id="emailSignInForm" class="email-signin-form">
+                <div class="form-group">
+                  <input type="email" id="emailInput" placeholder="Email address" required>
+                </div>
+                <div class="form-group">
+                  <input type="password" id="passwordInput" placeholder="Password" required>
+                </div>
+                <button type="submit" id="emailSignInBtn" class="sign-in-btn secondary email-btn">
+                  <span class="btn-icon">@</span>
+                  <div>
+                    <div class="btn-title">Sign in with Email</div>
+                    <div class="btn-subtitle">Use your email and password</div>
+                  </div>
+                </button>
+              </form>
+            </div>
           </div>
           
           <div class="privacy-note">
             <p>Your DS-160 data is never shared and remains completely private to your account</p>
-          </div>
-          
-          <div class="admin-access">
-            <button id="adminAccessBtn" class="admin-access-btn">
-              Admin Dashboard
-            </button>
           </div>
         </div>
       </div>
@@ -168,8 +175,31 @@
           <fieldset class="full">
             <legend>Have you ever used other names?</legend>
             <div class="inline">
-              <label><input type="radio" name="usedOtherNames" value="yes"> Yes</label>
-              <label><input type="radio" name="usedOtherNames" value="no" checked> No</label>
+              <label><input type="radio" name="usedOtherNames" value="yes" onchange="toggleConditionalField('otherNamesContainer', this.checked)"> Yes</label>
+              <label><input type="radio" name="usedOtherNames" value="no" checked onchange="toggleConditionalField('otherNamesContainer', false)"> No</label>
+            </div>
+            <div id="otherNamesContainer" class="conditional-container" style="display: none;">
+              <div class="repeat full">
+                <div class="items">
+                  <div class="item grid">
+                    <label>Surname<input name="otherSurname"></label>
+                    <label>Given Names<input name="otherGivenNames"></label>
+                    <label class="full">Type of Name
+                      <select name="otherNameType">
+                        <option value="">- SELECT ONE -</option>
+                        <option>MAIDEN NAME</option>
+                        <option>ALIAS</option>
+                        <option>NAME BY PREVIOUS MARRIAGE</option>
+                        <option>RELIGIOUS NAME</option>
+                        <option>PROFESSIONAL NAME</option>
+                        <option>OTHER</option>
+                      </select>
+                    </label>
+                    <div><button type="button" class="remove-row">Remove</button></div>
+                  </div>
+                </div>
+                <button type="button" class="add-row">Add Another Name</button>
+              </div>
             </div>
           </fieldset>
           <label>
@@ -235,15 +265,22 @@
           <fieldset class="full">
             <legend>Do you hold any other nationality?</legend>
             <div class="inline">
-              <label><input type="radio" name="otherNationality" value="yes"> Yes</label>
-              <label><input type="radio" name="otherNationality" value="no" checked> No</label>
+              <label><input type="radio" name="otherNationality" value="yes" onchange="toggleConditionalField('otherNationalityContainer', this.checked)"> Yes</label>
+              <label><input type="radio" name="otherNationality" value="no" checked onchange="toggleConditionalField('otherNationalityContainer', false)"> No</label>
+            </div>
+            <div id="otherNationalityContainer" class="conditional-container" style="display: none;">
+              <label class="full">Other Country/Region of Nationality<input name="otherNationalityCountry" list="countries"></label>
+              <label class="full">Passport Number of Other Nationality<input name="otherNationalityPassport"></label>
             </div>
           </fieldset>
           <fieldset class="full">
             <legend>Are you a permanent resident of another country?</legend>
             <div class="inline">
-              <label><input type="radio" name="permanentResidentElsewhere" value="yes"> Yes</label>
-              <label><input type="radio" name="permanentResidentElsewhere" value="no" checked> No</label>
+              <label><input type="radio" name="permanentResidentElsewhere" value="yes" onchange="toggleConditionalField('permanentResidentContainer', this.checked)"> Yes</label>
+              <label><input type="radio" name="permanentResidentElsewhere" value="no" checked onchange="toggleConditionalField('permanentResidentContainer', false)"> No</label>
+            </div>
+            <div id="permanentResidentContainer" class="conditional-container" style="display: none;">
+              <label class="full">Country/Region of Permanent Residence<input name="permanentResidenceCountry" list="countries"></label>
             </div>
           </fieldset>
           <label class="full">
@@ -289,8 +326,28 @@
           <fieldset class="full">
             <legend>Have you made specific travel plans?</legend>
             <div class="inline">
-              <label><input type="radio" name="specificPlans" value="yes"> Yes</label>
-              <label><input type="radio" name="specificPlans" value="no" checked> No</label>
+              <label><input type="radio" name="specificPlans" value="yes" onchange="toggleConditionalField('specificPlansContainer', this.checked)"> Yes</label>
+              <label><input type="radio" name="specificPlans" value="no" checked onchange="toggleConditionalField('specificPlansContainer', false)"> No</label>
+            </div>
+            <div id="specificPlansContainer" class="conditional-container" style="display: none;">
+              <fieldset class="full">
+                <legend>Intended Date of Departure</legend>
+                <div class="dob">
+                  <label>Day<input name="departureDay" inputmode="numeric" maxlength="2"></label>
+                  <label>Month
+                    <select name="departureMonth">
+                      <option value="">MM</option>
+                      <option>JAN</option><option>FEB</option><option>MAR</option><option>APR</option>
+                      <option>MAY</option><option>JUN</option><option>JUL</option><option>AUG</option>
+                      <option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option>
+                    </select>
+                  </label>
+                  <label>Year<input name="departureYear" inputmode="numeric" maxlength="4"></label>
+                </div>
+              </fieldset>
+              <label class="full">Flight Number/Carrier<input name="flightNumber"></label>
+              <label class="full">City Where You Boarded<input name="boardingCity"></label>
+              <label class="full">City of Final Destination<input name="finalDestinationCity"></label>
             </div>
           </fieldset>
           <fieldset class="full">
@@ -356,8 +413,33 @@
           <fieldset class="full">
             <legend>Are there other persons traveling with you?</legend>
             <div class="inline">
-              <label><input type="radio" name="hasCompanions" value="yes"> Yes</label>
-              <label><input type="radio" name="hasCompanions" value="no" checked> No</label>
+              <label><input type="radio" name="hasCompanions" value="yes" onchange="toggleConditionalField('companionsContainer', this.checked)"> Yes</label>
+              <label><input type="radio" name="hasCompanions" value="no" checked onchange="toggleConditionalField('companionsContainer', false)"> No</label>
+            </div>
+            <div id="companionsContainer" class="conditional-container" style="display: none;">
+              <div class="repeat full">
+                <div class="items">
+                  <div class="item grid">
+                    <label>Surname<input name="companionSurname"></label>
+                    <label>Given Names<input name="companionGivenNames"></label>
+                    <label class="full">Relationship to You
+                      <select name="companionRelationship">
+                        <option value="">- SELECT ONE -</option>
+                        <option>SPOUSE</option>
+                        <option>CHILD</option>
+                        <option>PARENT</option>
+                        <option>SIBLING</option>
+                        <option>FRIEND</option>
+                        <option>COLLEAGUE</option>
+                        <option>OTHER RELATIVE</option>
+                        <option>OTHER</option>
+                      </select>
+                    </label>
+                    <div><button type="button" class="remove-row">Remove</button></div>
+                  </div>
+                </div>
+                <button type="button" class="add-row">Add Another Companion</button>
+              </div>
             </div>
           </fieldset>
         </div>
@@ -379,7 +461,19 @@
           <label>Postal Zone/ZIP Code<input name="homeZip"></label>
           <label>Country/Region<input name="homeCountry" list="countries"></label>
           <fieldset class="full"><legend>Is Mailing Address same as Home?</legend>
-            <div class="inline"><label><input type="radio" name="mailingSame" value="yes" checked> Yes</label><label><input type="radio" name="mailingSame" value="no"> No</label></div>
+            <div class="inline">
+              <label><input type="radio" name="mailingSame" value="yes" checked onchange="toggleConditionalField('mailingAddressContainer', false)"> Yes</label>
+              <label><input type="radio" name="mailingSame" value="no" onchange="toggleConditionalField('mailingAddressContainer', this.checked)"> No</label>
+            </div>
+            <div id="mailingAddressContainer" class="conditional-container" style="display: none;">
+              <h3 class="full">Mailing Address</h3>
+              <label class="full">Street Address (Line 1)<input name="mailStreet1"></label>
+              <label class="full">Street Address (Line 2)<input name="mailStreet2"></label>
+              <label>City<input name="mailCity"></label>
+              <label>State/Province<input name="mailState"></label>
+              <label>Postal Zone/ZIP Code<input name="mailZip"></label>
+              <label>Country/Region<input name="mailCountry" list="countries"></label>
+            </div>
           </fieldset>
 
           <h3 class="full">Phone</h3>
@@ -387,13 +481,41 @@
           <label>Secondary Phone Number<input name="secondaryPhone"></label>
           <label>Work Phone Number<input name="workPhone"></label>
           <fieldset class="full"><legend>Have you used other phone numbers in the last five years?</legend>
-            <div class="inline"><label><input type="radio" name="usedOtherPhones" value="yes"> Yes</label><label><input type="radio" name="usedOtherPhones" value="no" checked> No</label></div>
+            <div class="inline">
+              <label><input type="radio" name="usedOtherPhones" value="yes" onchange="toggleConditionalField('otherPhonesContainer', this.checked)"> Yes</label>
+              <label><input type="radio" name="usedOtherPhones" value="no" checked onchange="toggleConditionalField('otherPhonesContainer', false)"> No</label>
+            </div>
+            <div id="otherPhonesContainer" class="conditional-container" style="display: none;">
+              <div class="repeat full">
+                <div class="items">
+                  <div class="item grid">
+                    <label class="full">Previous Phone Number<input name="previousPhone"></label>
+                    <div><button type="button" class="remove-row">Remove</button></div>
+                  </div>
+                </div>
+                <button type="button" class="add-row">Add Another Phone</button>
+              </div>
+            </div>
           </fieldset>
 
           <h3 class="full">Email</h3>
           <label class="full">Email Address<input name="email"></label>
           <fieldset class="full"><legend>Have you used other email addresses in the last five years?</legend>
-            <div class="inline"><label><input type="radio" name="usedOtherEmails" value="yes"> Yes</label><label><input type="radio" name="usedOtherEmails" value="no" checked> No</label></div>
+            <div class="inline">
+              <label><input type="radio" name="usedOtherEmails" value="yes" onchange="toggleConditionalField('otherEmailsContainer', this.checked)"> Yes</label>
+              <label><input type="radio" name="usedOtherEmails" value="no" checked onchange="toggleConditionalField('otherEmailsContainer', false)"> No</label>
+            </div>
+            <div id="otherEmailsContainer" class="conditional-container" style="display: none;">
+              <div class="repeat full">
+                <div class="items">
+                  <div class="item grid">
+                    <label class="full">Previous Email Address<input name="previousEmail" type="email"></label>
+                    <div><button type="button" class="remove-row">Remove</button></div>
+                  </div>
+                </div>
+                <button type="button" class="add-row">Add Another Email</button>
+              </div>
+            </div>
           </fieldset>
 
           <h3 class="full">Social Media</h3>
@@ -415,7 +537,21 @@
           </div>
 
           <fieldset class="full"><legend>Other content-sharing websites used within last five years?</legend>
-            <div class="inline"><label><input type="radio" name="otherWebsitesUsed" value="yes"> Yes</label><label><input type="radio" name="otherWebsitesUsed" value="no" checked> No</label></div>
+            <div class="inline">
+              <label><input type="radio" name="otherWebsitesUsed" value="yes" onchange="toggleConditionalField('otherWebsitesContainer', this.checked)"> Yes</label>
+              <label><input type="radio" name="otherWebsitesUsed" value="no" checked onchange="toggleConditionalField('otherWebsitesContainer', false)"> No</label>
+            </div>
+            <div id="otherWebsitesContainer" class="conditional-container" style="display: none;">
+              <div class="repeat full">
+                <div class="items">
+                  <div class="item grid">
+                    <label class="full">Website Name/URL<input name="websiteName"></label>
+                    <div><button type="button" class="remove-row">Remove</button></div>
+                  </div>
+                </div>
+                <button type="button" class="add-row">Add Another Website</button>
+              </div>
+            </div>
           </fieldset>
         </div>
         <div class="nav"><button type="button" class="back" data-back="companions">Back</button><button type="button" class="next" data-next="passport">Next: Passport</button></div>
@@ -678,27 +814,6 @@
         </div>
       </section>
 
-      <!-- Admin Dashboard -->
-      <section id="section-admin" class="form-section" data-section="admin">
-        <div class="admin-header">
-          <h2>Admin Dashboard</h2>
-          <p>View and manage all form submissions from Firebase.</p>
-          <button id="refreshFormsBtn" type="button" class="refresh-btn">Refresh</button>
-        </div>
-        
-        <div class="admin-stats" id="adminStats"></div>
-        
-        <div class="admin-controls">
-          <button id="exportAllBtn" type="button">Export All Data</button>
-          <button id="clearAllBtn" type="button" class="danger">Clear All Data</button>
-        </div>
-        
-        <div id="adminFormsList" class="admin-forms-list"></div>
-        
-        <div class="nav">
-          <button type="button" class="back" data-back="preview">Back to Preview</button>
-        </div>
-      </section>
     </section>
   </main>
 
@@ -714,7 +829,7 @@
     // Import Firebase modules
     import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
     import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp, where } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
-    import { getAuth, signInWithPopup, GoogleAuthProvider, signInAnonymously, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import { getAuth, signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
     
     // Firebase configuration
     const firebaseConfig = {
@@ -749,7 +864,8 @@
       where,
       serverTimestamp,
       signInWithPopup,
-      signInAnonymously,
+      signInWithEmailAndPassword,
+      createUserWithEmailAndPassword,
       signOut,
       onAuthStateChanged,
       GoogleAuthProvider
