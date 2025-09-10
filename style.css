@@ -339,7 +339,6 @@ button:active {
 .nav-btn {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   width: 100%;
   text-align: left;
   margin: 0;
@@ -352,8 +351,9 @@ button:active {
   font-size: 14px;
   font-weight: 400;
   position: relative;
-  min-height: auto;
-  gap: 12px;
+  min-height: 56px;
+  gap: 0;
+  justify-content: flex-start;
 }
 
 
@@ -370,9 +370,19 @@ button:active {
   font-weight: 500;
 }
 
+.nav-btn.active:before {
+  background: var(--primary-blue);
+  color: white;
+}
+
 .nav-btn:last-child {
   border-bottom: none;
 }
+.nav-btn .nav-text {
+  flex: 1;
+  min-width: 0;
+}
+
 .completion-indicator {
   font-size: 11px;
   font-weight: 600;
@@ -380,12 +390,11 @@ button:active {
   border-radius: 12px;
   background: var(--border);
   color: var(--text-primary);
-  margin-left: auto;
   border: 1px solid var(--border);
-  min-width: 40px;
+  min-width: 45px;
   text-align: center;
   flex-shrink: 0;
-  margin-left: 16px;
+  margin-left: auto;
 }
 
 .nav-btn.section-empty .completion-indicator {
@@ -408,20 +417,33 @@ button:active {
 
 .nav-btn.section-complete:before {
   content: '✓';
-  position: absolute;
-  right: 30px;
-  color: var(--success);
+  background: var(--success);
+  color: white;
+  font-size: 14px;
   font-weight: bold;
-  font-size: 12px;
+}
+
+.nav-btn.section-complete .completion-indicator {
+  background: var(--success);
+  color: white;
+  border-color: var(--success);
 }
 
 .nav-btn:before {
-  margin-right: 12px;
-  font-size: 16px;
-  width: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
   text-align: center;
-  color: var(--text-secondary);
+  color: white;
+  background: var(--text-secondary);
+  border-radius: 50%;
   flex-shrink: 0;
+  margin-right: 16px;
 }
 
 /* Navigation icons - using text instead of emojis */
@@ -810,9 +832,10 @@ h3 {
 }
 .preview-stats {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
   margin-bottom: 32px;
+  align-items: stretch;
 }
 
 .stat-card {
@@ -897,16 +920,32 @@ h3 {
   border-radius: 8px;
   overflow: hidden;
   box-shadow: var(--shadow);
+  background: var(--surface);
+}
+
+.group .kv-list {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
 }
 
 .kv-row {
   display: grid;
-  grid-template-columns: 220px 1fr auto;
-  gap: 16px;
-  align-items: center;
+  grid-template-columns: 240px 1fr auto;
+  gap: 20px;
+  align-items: start;
   border-bottom: 1px solid var(--border);
-  padding: 16px 20px;
+  padding: 18px 20px;
   transition: background-color 0.15s ease;
+}
+
+.group .kv-row {
+  padding: 16px 20px;
+}
+
+.group .kv-row:first-child {
+  border-top: none;
 }
 
 .kv-row:last-child {
@@ -931,13 +970,15 @@ h3 {
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  padding-top: 2px;
 }
 
 .kv-val {
   word-break: break-word;
   font-size: 14px;
-  line-height: 1.4;
+  line-height: 1.5;
   color: var(--text-primary);
+  padding-top: 2px;
 }
 
 .empty-text {
@@ -1014,9 +1055,10 @@ h3 {
 .group {
   border: 1px solid var(--border);
   border-radius: 8px;
-  margin: 24px 0;
+  margin: 20px 0;
   box-shadow: var(--shadow);
   overflow: hidden;
+  background: var(--surface);
 }
 
 .group > h4 {
@@ -1024,19 +1066,29 @@ h3 {
   padding: 16px 20px;
   background: var(--primary-blue-light);
   border-bottom: 1px solid var(--border);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 500;
   color: var(--primary-blue);
   display: flex;
   align-items: center;
+  justify-content: flex-start;
+  min-height: 50px;
 }
 
 .group > h4:before {
   content: '';
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
   margin-right: 12px;
-  font-size: 16px;
+  font-size: 12px;
   font-weight: 600;
-  color: var(--primary-blue);
+  color: white;
+  background: var(--primary-blue);
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 .group:first-child > h4:before{content:'1'}
 .group:nth-child(2) > h4:before{content:'2'}
@@ -1347,6 +1399,14 @@ h3 {
     border-bottom: 1px solid var(--border);
     border-right: 1px solid var(--border);
     font-size: 12px;
+    min-height: 48px;
+  }
+  
+  .nav-btn:before {
+    width: 24px;
+    height: 24px;
+    font-size: 11px;
+    margin-right: 12px;
   }
   
   .nav-btn:last-child {
@@ -1375,17 +1435,26 @@ h3 {
   
   .kv-row {
     grid-template-columns: 1fr;
-    gap: 8px;
+    gap: 12px;
+    padding: 16px;
+    align-items: stretch;
   }
   
   .kv-key {
     font-size: 12px;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
+    padding-top: 0;
+  }
+  
+  .kv-val {
+    padding-top: 0;
+    margin-bottom: 8px;
   }
   
   .kv-actions {
     justify-content: flex-start;
     flex-wrap: wrap;
+    margin-top: 4px;
   }
   
   .preview-stats {
@@ -1396,9 +1465,25 @@ h3 {
     padding: 20px;
   }
   
+  .group {
+    margin: 16px 0;
+  }
+  
   .group > h4 {
-    padding: 16px 18px;
+    padding: 14px 16px;
     font-size: 14px;
+    min-height: 44px;
+  }
+  
+  .group > h4:before {
+    width: 20px;
+    height: 20px;
+    font-size: 11px;
+    margin-right: 10px;
+  }
+  
+  .group .kv-row {
+    padding: 12px 16px;
   }
   
   .repeat .item {

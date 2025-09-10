@@ -577,6 +577,16 @@
         // Update or add completion indicator
         let indicator = navBtn.querySelector('.completion-indicator');
         if (!indicator) {
+          // Wrap existing text content in a nav-text span
+          if (!navBtn.querySelector('.nav-text')) {
+            const textContent = navBtn.textContent;
+            navBtn.textContent = '';
+            const textSpan = document.createElement('span');
+            textSpan.className = 'nav-text';
+            textSpan.textContent = textContent;
+            navBtn.appendChild(textSpan);
+          }
+          
           indicator = document.createElement('span');
           indicator.className = 'completion-indicator';
           navBtn.appendChild(indicator);
