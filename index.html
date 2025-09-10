@@ -4,6 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>DS-160 Helper Form</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -24,20 +27,20 @@
           <span id="userName" class="user-name"></span>
         </div>
         <div id="authButtons" class="auth-buttons">
-          <button id="signInBtn" type="button">👤 Sign In</button>
-          <button id="anonymousBtn" type="button">🕶️ Anonymous</button>
+          <button id="signInBtn" type="button">Sign In</button>
+          <button id="anonymousBtn" type="button">Anonymous</button>
         </div>
         <button id="signOutBtn" type="button" style="display:none;">Sign Out</button>
       </div>
-      <button id="skipToEmptyBtn" type="button" title="Skip to next section with empty fields (Ctrl+E)">⏭️ Next Empty</button>
+      <button id="skipToEmptyBtn" type="button" title="Skip to next section with empty fields (Ctrl+E)">Next Empty</button>
       <button id="saveBtn" type="button" title="Save form (Ctrl+S)">Save</button>
       <div class="export-dropdown">
-        <button id="exportBtn" type="button" title="Export form in various formats">📥 Export ▼</button>
+        <button id="exportBtn" type="button" title="Export form in various formats">Export ▼</button>
         <div class="export-menu">
-          <button id="printPdfBtn" type="button">🖨️ Print/PDF</button>
-          <button id="exportJsonBtn" type="button">📄 JSON</button>
-          <button id="exportCsvBtn" type="button">📊 CSV</button>
-          <button id="exportTxtBtn" type="button">📝 Text</button>
+          <button id="printPdfBtn" type="button">Print/PDF</button>
+          <button id="exportJsonBtn" type="button">JSON</button>
+          <button id="exportCsvBtn" type="button">CSV</button>
+          <button id="exportTxtBtn" type="button">Text</button>
         </div>
       </div>
       <button id="resetBtn" type="button">Reset Form</button>
@@ -48,40 +51,40 @@
   <div id="signInPage" class="sign-in-page">
     <div class="sign-in-container">
       <div class="sign-in-header">
-        <h1>📝 DS-160 Helper</h1>
+        <h1>DS-160 Helper</h1>
         <p>Your secure companion for completing the DS-160 U.S. visa application form</p>
       </div>
       
       <div class="sign-in-content">
         <div class="feature-list">
-          <div class="feature-item">
-            <span class="feature-icon">🔒</span>
-            <div>
-              <h3>Secure & Private</h3>
-              <p>Your data is encrypted and stored securely in your personal account</p>
-            </div>
+        <div class="feature-item">
+          <span class="feature-icon">🔒</span>
+          <div>
+            <h3>Secure & Private</h3>
+            <p>Your data is encrypted and stored securely in your personal account</p>
           </div>
-          <div class="feature-item">
-            <span class="feature-icon">💾</span>
-            <div>
-              <h3>Auto-Save</h3>
-              <p>Never lose your progress - everything saves automatically as you type</p>
-            </div>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">💾</span>
+          <div>
+            <h3>Auto-Save</h3>
+            <p>Never lose your progress - everything saves automatically as you type</p>
           </div>
-          <div class="feature-item">
-            <span class="feature-icon">📋</span>
-            <div>
-              <h3>Complete Form</h3>
-              <p>Fill out all 18 sections of the DS-160 form with guided assistance</p>
-            </div>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">📝</span>
+          <div>
+            <h3>Complete Form</h3>
+            <p>Fill out all 18 sections of the DS-160 form with guided assistance</p>
           </div>
-          <div class="feature-item">
-            <span class="feature-icon">🖨️</span>
-            <div>
-              <h3>Print Ready</h3>
-              <p>Generate clean, professional PDF copies of your completed form</p>
-            </div>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon">🖨️</span>
+          <div>
+            <h3>Print Ready</h3>
+            <p>Generate clean, professional PDF copies of your completed form</p>
           </div>
+        </div>
         </div>
         
         <div class="sign-in-actions">
@@ -90,7 +93,7 @@
           
           <div class="sign-in-buttons">
             <button id="googleSignInBtn" class="sign-in-btn primary">
-              <span class="btn-icon">📧</span>
+              <span class="btn-icon">G</span>
               <div>
                 <div class="btn-title">Continue with Google</div>
                 <div class="btn-subtitle">Recommended - sync across devices</div>
@@ -98,7 +101,7 @@
             </button>
             
             <button id="anonymousSignInBtn" class="sign-in-btn secondary">
-              <span class="btn-icon">🕶️</span>
+              <span class="btn-icon">A</span>
               <div>
                 <div class="btn-title">Continue Anonymously</div>
                 <div class="btn-subtitle">No account required - session only</div>
@@ -107,12 +110,12 @@
           </div>
           
           <div class="privacy-note">
-            <p>🔐 Your DS-160 data is never shared and remains completely private to your account</p>
+            <p>Your DS-160 data is never shared and remains completely private to your account</p>
           </div>
           
           <div class="admin-access">
             <button id="adminAccessBtn" class="admin-access-btn">
-              🔧 Admin Dashboard
+              Admin Dashboard
             </button>
           </div>
         </div>
@@ -653,7 +656,7 @@
       <!-- Preview -->
       <section id="section-preview" class="form-section" data-section="preview">
         <div class="preview-header">
-          <h2>📋 Form Preview</h2>
+          <h2>Form Preview</h2>
           <p>Review and confirm your answers by section. Use the "Mark Correct" button to confirm accurate information.</p>
         </div>
         
@@ -678,16 +681,16 @@
       <!-- Admin Dashboard -->
       <section id="section-admin" class="form-section" data-section="admin">
         <div class="admin-header">
-          <h2>🔥 Admin Dashboard</h2>
+          <h2>Admin Dashboard</h2>
           <p>View and manage all form submissions from Firebase.</p>
-          <button id="refreshFormsBtn" type="button" class="refresh-btn">🔄 Refresh</button>
+          <button id="refreshFormsBtn" type="button" class="refresh-btn">Refresh</button>
         </div>
         
         <div class="admin-stats" id="adminStats"></div>
         
         <div class="admin-controls">
-          <button id="exportAllBtn" type="button">📊 Export All Data</button>
-          <button id="clearAllBtn" type="button" class="danger">🗑️ Clear All Data</button>
+          <button id="exportAllBtn" type="button">Export All Data</button>
+          <button id="clearAllBtn" type="button" class="danger">Clear All Data</button>
         </div>
         
         <div id="adminFormsList" class="admin-forms-list"></div>
@@ -700,7 +703,7 @@
   </main>
 
   <div class="shortcut-hint" role="note" aria-label="Keyboard shortcuts">
-    <span class="shortcut-icon">💡</span>
+    <span class="shortcut-icon">i</span>
     <span class="shortcut-info">Ctrl+S Save • Ctrl+P Print • Ctrl+E Next Empty • ←/→ navigate • 1–9 jump</span>
   </div>
 

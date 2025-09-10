@@ -1191,6 +1191,7 @@
       console.log('🔄 User confirmed form reset');
       clearForms();
       renderPreview();
+      updateProgress(); // Update progress indicators after reset
       
       // Clear confirmed states as well
       saveConfirmed({});
@@ -1533,10 +1534,29 @@
         // Insert tooltip after the field's label text
         const label = field.closest('label');
         if (label) {
-          const labelText = label.firstChild;
-          if (labelText && labelText.nodeType === 3) { // Text node
-            labelText.after(tooltip);
+          // Create a label header container if it doesn't exist
+          let labelHeader = label.querySelector('.label-header');
+          if (!labelHeader) {
+            labelHeader = document.createElement('div');
+            labelHeader.className = 'label-header';
+            
+            // Move the label text into the header
+            const labelText = label.firstChild;
+            if (labelText && labelText.nodeType === 3) { // Text node
+              const textSpan = document.createElement('span');
+              textSpan.textContent = labelText.textContent;
+              labelHeader.appendChild(textSpan);
+              label.removeChild(labelText);
+            } else if (labelText) {
+              labelHeader.appendChild(labelText);
+            }
+            
+            // Insert the header at the beginning of the label
+            label.insertBefore(labelHeader, label.firstChild);
           }
+          
+          // Add tooltip to the header
+          labelHeader.appendChild(tooltip);
         }
       }
     });
