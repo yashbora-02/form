@@ -1,0 +1,26 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /forms/{document} {
+      // Allow authenticated users to CREATE new forms
+      allow create: if request.auth != null &&
+        request.resource.data.userId == request.auth.uid;
+
+      // Allow users to READ and UPDATE their own forms
+      allow read, update: if request.auth != null &&
+        resource.data.userId == request.auth.uid;
+
+      // Allow users to DELETE their own forms  
+      allow delete: if request.auth != null &&
+        resource.data.userId == request.auth.uid;
+
+      // Anyone can read shared forms
+      allow read: if resource.data.isShared == true;
+
+      // Admin can read and delete all forms
+      allow read, delete: if request.auth != null &&
+        (request.auth.token.email == 'yashbora.ai@gmail.com' ||
+         request.auth.token.email == 'vaibhav@chhajed.ai');
+    }
+  }
+}

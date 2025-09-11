@@ -29,20 +29,30 @@
   function isAdmin(user) {
     if (!user) return false;
     
+    // Debug: Log user information for troubleshooting
+    console.log('🔍 Admin check for user:', {
+      email: user.email,
+      displayName: user.displayName,
+      uid: user.uid
+    });
+    
     // Only these emails are authorized for admin access
     const adminEmails = ['yashbora.ai@gmail.com', 'vaibhav@chhajed.ai'];
     const adminUIDs = []; // Add your specific UIDs if known
     
     // Check by email
     if (user.email && adminEmails.includes(user.email.toLowerCase())) {
+      console.log('✅ Admin access granted for email:', user.email);
       return true;
     }
     
     // Check by UID (if you know your specific UID)
     if (user.uid && adminUIDs.includes(user.uid)) {
+      console.log('✅ Admin access granted for UID:', user.uid);
       return true;
     }
     
+    console.log('❌ Admin access denied. Email not in authorized list:', adminEmails);
     return false;
   }
   
