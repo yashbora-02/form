@@ -54,6 +54,40 @@
     });
   }
 
+  // Centralized field counting logic
+  function getFormFieldStats(formData) {
+    // Define all possible form fields consistently (same as organizeFormDataBySections)
+    const allFormFields = [
+      'surnames', 'givenNames', 'nativeAlphabetName', 'usedOtherNames', 'gender', 'maritalStatus', 
+      'dobDay', 'dobMonth', 'dobYear', 'birthCity', 'birthCountry', 'nationality', 'otherNationality', 
+      'nationalIdNumber', 'usSsn', 'usTin', 'purpose', 'specificPlans', 'arrivalDate', 'departureDate', 
+      'stayDuration', 'visitedUsBefore', 'previousVisitDetails', 'usVisaRefused', 'refusalReason',
+      'homeAddress', 'homeCity', 'homeState', 'homePostal', 'homeCountry', 'homePhone', 'workPhone', 
+      'cellPhone', 'email', 'mailingAddress', 'passportNumber', 'passportType', 'passportIssueDate', 
+      'passportExpDate', 'passportIssueCountry', 'passportIssueCity', 'passportLostStolen',
+      'usContactName', 'usContactOrg', 'usContactAddress', 'usContactCity', 'usContactState', 
+      'usContactZip', 'usContactPhone', 'usContactEmail', 'usContactRelation',
+      'fatherName', 'fatherDob', 'fatherBirthCountry', 'fatherCountry', 'motherName', 'motherDob', 
+      'motherBirthCountry', 'motherCountry', 'spouseName', 'spouseDob', 'spouseBirthCountry', 'spouseCountry',
+      'currentOccupation', 'currentEmployer', 'currentWorkAddress', 'currentSalary', 'workStartDate', 
+      'previousWork', 'education', 'schoolName', 'schoolAddress', 'courseOfStudy', 'attendanceDate',
+      'travelingWithOthers', 'companionName', 'companionRelation', 'groupTravel', 'groupName',
+      'criminalActivity', 'drugTrafficking', 'espionage', 'genocide', 'terrorism', 'moneyLaundering', 
+      'humanTrafficking', 'assistingTerrorist', 'unlawfulActivity', 'fraud', 'childAbduction', 
+      'deportation', 'visaViolation', 'mentalDisorder', 'drugAbuse', 'communicableDisease', 'publicCharge',
+      'studentExchange', 'sevisId', 'programNumber', 'academicTerm', 'fundingSource'
+    ];
+    
+    const totalFields = allFormFields.length;
+    const filledFields = allFormFields.filter(field => {
+      const value = formData[field];
+      return value !== undefined && value !== null && value !== '' && String(value).trim() !== '';
+    }).length;
+    const completionPercentage = Math.round((filledFields / totalFields) * 100);
+    
+    return { totalFields, filledFields, completionPercentage };
+  }
+
   function setSaveButtonState(state, text = '', duration = 0) {
     const saveBtn = document.getElementById('saveBtn');
     if (!saveBtn) return;
@@ -1049,8 +1083,9 @@
     const formsListHTML = forms.map((form, index) => {
       const date = form.lastModified ? new Date(form.lastModified).toLocaleString() : 'Unknown';
       const { timestamp, lastModified, confirmed, userId, userEmail, userName, isShared, shareId, ...formData } = form;
-      const fieldsCount = Object.keys(formData).length;
-      const filledFields = Object.values(formData).filter(val => val && String(val).trim() !== '').length;
+      const stats = getFormFieldStats(formData);
+      const fieldsCount = stats.totalFields;
+      const filledFields = stats.filledFields;
       
       // Determine display name priority: form name > user name > email > anonymous
       let displayName = 'Anonymous User';
@@ -1397,15 +1432,12 @@
   async function viewForm(formId) {
     try {
       const docRef = window.firebase.doc(window.firebase.db, 'forms', formId);
-      const docSnap = await window.firebase.getDocs(window.firebase.query(window.firebase.collection(window.firebase.db, 'forms')));
+      const docSnap = await window.firebase.getDoc(docRef);
       
-      // Find the specific form
       let formData = null;
-      docSnap.forEach((doc) => {
-        if (doc.id === formId) {
-          formData = doc.data();
-        }
-      });
+      if (docSnap.exists()) {
+        formData = docSnap.data();
+      }
       
       if (formData) {
         const { timestamp, lastModified, confirmed, userId, userEmail, userName, isShared, shareId, ...cleanData } = formData;
@@ -1647,7 +1679,7 @@
       fields: section.fields.map(fieldName => ({
         key: fieldName,
         value: formData[fieldName]
-      })).filter(field => field.value) // Only show fields with values
+      })).filter(field => field.value !== undefined && field.value !== null && field.value !== '') // Only show fields with meaningful values
     })).filter(section => section.fields.length > 0); // Only show sections with data
   }
   
@@ -1729,22 +1761,20 @@
   }
   
   function generateStatsSection(formData) {
-    const totalFields = Object.keys(formData).length;
-    const filledFields = Object.values(formData).filter(val => val && String(val).trim() !== '').length;
-    const completionPercentage = Math.round((filledFields / totalFields) * 100);
+    const stats = getFormFieldStats(formData);
     
     return `
       <div class="stats">
         <div class="stat">
-          <div class="stat-number">${totalFields}</div>
+          <div class="stat-number">${stats.totalFields}</div>
           <div class="stat-label">Total Fields</div>
         </div>
         <div class="stat">
-          <div class="stat-number">${filledFields}</div>
+          <div class="stat-number">${stats.filledFields}</div>
           <div class="stat-label">Fields Completed</div>
         </div>
         <div class="stat">
-          <div class="stat-number">${completionPercentage}%</div>
+          <div class="stat-number">${stats.completionPercentage}%</div>
           <div class="stat-label">Completion Rate</div>
         </div>
       </div>
