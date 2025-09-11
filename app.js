@@ -1427,38 +1427,170 @@
       });
       
       if (formData) {
-        // Create a popup window with form data
-        const popup = window.open('', '_blank', 'width=800,height=600,scrollbars=yes');
         const { timestamp, lastModified, confirmed, userId, userEmail, userName, isShared, shareId, ...cleanData } = formData;
+        
+        // Organize form data by sections
+        const sections = organizeFormDataBySections(cleanData);
+        
+        // Create a popup window with organized form data
+        const popup = window.open('', '_blank', 'width=1000,height=700,scrollbars=yes');
         
         popup.document.write(`
           <!DOCTYPE html>
           <html>
           <head>
-            <title>Form View - ${userName}</title>
+            <title>DS-160 Form - ${userName || 'Form Submission'}</title>
+            <meta charset="utf-8">
             <style>
-              body { font-family: system-ui, sans-serif; padding: 20px; }
-              .header { background: #f3f4f6; padding: 15px; border-radius: 8px; margin-bottom: 20px; }
-              .field { margin: 10px 0; padding: 8px; border-left: 3px solid #2563eb; background: #f8fafc; }
-              .label { font-weight: bold; color: #374151; }
-              .value { margin-top: 4px; }
-              .empty { color: #9ca3af; font-style: italic; }
+              * { box-sizing: border-box; margin: 0; padding: 0; }
+              body { 
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+                line-height: 1.6; 
+                color: #333; 
+                background: #f8f9fa;
+                padding: 20px;
+              }
+              .container { max-width: 900px; margin: 0 auto; }
+              .header { 
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white; 
+                padding: 30px; 
+                border-radius: 12px; 
+                margin-bottom: 30px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+              }
+              .header h1 { font-size: 28px; margin-bottom: 15px; }
+              .header-info { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+              .header-info p { margin: 5px 0; opacity: 0.95; }
+              .section { 
+                background: white; 
+                margin-bottom: 25px; 
+                border-radius: 10px; 
+                overflow: hidden;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+              }
+              .section-header { 
+                background: #4f46e5; 
+                color: white; 
+                padding: 15px 25px; 
+                font-weight: 600;
+                font-size: 18px;
+              }
+              .section-content { padding: 25px; }
+              .field-grid { 
+                display: grid; 
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+                gap: 20px; 
+              }
+              .field { 
+                border-left: 4px solid #e5e7eb; 
+                padding: 15px; 
+                background: #f9fafb;
+                border-radius: 0 6px 6px 0;
+                transition: all 0.2s ease;
+              }
+              .field:hover { 
+                border-left-color: #4f46e5; 
+                background: #f3f4f6; 
+              }
+              .field-label { 
+                font-weight: 600; 
+                color: #374151; 
+                margin-bottom: 8px;
+                text-transform: capitalize;
+              }
+              .field-value { 
+                color: #6b7280; 
+                font-size: 15px;
+                word-break: break-word;
+              }
+              .field-value.filled { color: #111827; font-weight: 500; }
+              .field-value.empty { 
+                color: #9ca3af; 
+                font-style: italic; 
+                opacity: 0.7;
+              }
+              .stats { 
+                display: flex; 
+                justify-content: space-around; 
+                background: white; 
+                padding: 20px; 
+                border-radius: 10px; 
+                margin-bottom: 20px;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+              }
+              .stat { text-align: center; }
+              .stat-number { 
+                font-size: 24px; 
+                font-weight: bold; 
+                color: #4f46e5; 
+              }
+              .stat-label { 
+                color: #6b7280; 
+                font-size: 14px; 
+                margin-top: 5px;
+              }
+              .print-btn {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #4f46e5;
+                color: white;
+                border: none;
+                padding: 12px 20px;
+                border-radius: 6px;
+                cursor: pointer;
+                font-weight: 500;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+              }
+              .print-btn:hover { background: #4338ca; }
+              @media print {
+                body { background: white; padding: 0; }
+                .print-btn { display: none; }
+                .section { break-inside: avoid; }
+              }
             </style>
           </head>
           <body>
-            <div class="header">
-              <h2>📋 Form Submission</h2>
-              <p><strong>User:</strong> ${userName}</p>
-              <p><strong>Email:</strong> ${userEmail || 'Not provided'}</p>
-              <p><strong>Last Modified:</strong> ${new Date(lastModified).toLocaleString()}</p>
-              <p><strong>Form ID:</strong> ${formId}</p>
-            </div>
-            ${Object.entries(cleanData).map(([key, value]) => `
-              <div class="field">
-                <div class="label">${key}</div>
-                <div class="value ${!value ? 'empty' : ''}">${value || 'Not filled'}</div>
+            <div class="container">
+              <button class="print-btn" onclick="window.print()">🖨️ Print</button>
+              
+              <div class="header">
+                <h1>📋 DS-160 Form Submission</h1>
+                <div class="header-info">
+                  <div>
+                    <p><strong>👤 Applicant:</strong> ${userName || 'Anonymous User'}</p>
+                    <p><strong>📧 Email:</strong> ${userEmail || 'Not provided'}</p>
+                  </div>
+                  <div>
+                    <p><strong>📅 Last Modified:</strong> ${new Date(lastModified).toLocaleString()}</p>
+                    <p><strong>🆔 Form ID:</strong> ${formId}</p>
+                  </div>
+                </div>
               </div>
-            `).join('')}
+              
+              ${generateStatsSection(cleanData)}
+              
+              ${sections.map(section => `
+                <div class="section">
+                  <div class="section-header">
+                    ${section.icon} ${section.title}
+                  </div>
+                  <div class="section-content">
+                    <div class="field-grid">
+                      ${section.fields.map(field => `
+                        <div class="field">
+                          <div class="field-label">${formatFieldLabel(field.key)}</div>
+                          <div class="field-value ${field.value ? 'filled' : 'empty'}">
+                            ${field.value || 'Not provided'}
+                          </div>
+                        </div>
+                      `).join('')}
+                    </div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
           </body>
           </html>
         `);
@@ -1470,6 +1602,170 @@
       console.error('❌ Error viewing form:', error);
       alert('Error viewing form. Please try again.');
     }
+  }
+  
+  // Helper functions for form view
+  function organizeFormDataBySections(formData) {
+    const sections = [
+      {
+        title: 'Personal Information',
+        icon: '👤',
+        fields: ['surnames', 'givenNames', 'nativeAlphabetName', 'usedOtherNames', 'gender', 'maritalStatus', 'dobDay', 'dobMonth', 'dobYear', 'birthCity', 'birthCountry', 'nationality', 'otherNationality', 'nationalIdNumber', 'usSsn', 'usTin']
+      },
+      {
+        title: 'Travel Information', 
+        icon: '✈️',
+        fields: ['purpose', 'specificPlans', 'arrivalDate', 'departureDate', 'stayDuration', 'visitedUsBefore', 'previousVisitDetails', 'usVisaRefused', 'refusalReason']
+      },
+      {
+        title: 'Address & Contact',
+        icon: '📍', 
+        fields: ['homeAddress', 'homeCity', 'homeState', 'homePostal', 'homeCountry', 'homePhone', 'workPhone', 'cellPhone', 'email', 'mailingAddress']
+      },
+      {
+        title: 'Passport Information',
+        icon: '📘',
+        fields: ['passportNumber', 'passportType', 'passportIssueDate', 'passportExpDate', 'passportIssueCountry', 'passportIssueCity', 'passportLostStolen']
+      },
+      {
+        title: 'U.S. Contact Information',
+        icon: '🇺🇸',
+        fields: ['usContactName', 'usContactOrg', 'usContactAddress', 'usContactCity', 'usContactState', 'usContactZip', 'usContactPhone', 'usContactEmail', 'usContactRelation']
+      },
+      {
+        title: 'Family Information', 
+        icon: '👨‍👩‍👧‍👦',
+        fields: ['fatherName', 'fatherDob', 'fatherBirthCountry', 'fatherCountry', 'motherName', 'motherDob', 'motherBirthCountry', 'motherCountry', 'spouseName', 'spouseDob', 'spouseBirthCountry', 'spouseCountry']
+      },
+      {
+        title: 'Work & Education',
+        icon: '🎓',
+        fields: ['currentOccupation', 'currentEmployer', 'currentWorkAddress', 'currentSalary', 'workStartDate', 'previousWork', 'education', 'schoolName', 'schoolAddress', 'courseOfStudy', 'attendanceDate']
+      },
+      {
+        title: 'Travel Companions',
+        icon: '👥',
+        fields: ['travelingWithOthers', 'companionName', 'companionRelation', 'groupTravel', 'groupName']
+      },
+      {
+        title: 'Security Questions',
+        icon: '🔒',
+        fields: ['criminalActivity', 'drugTrafficking', 'espionage', 'genocide', 'terrorism', 'money laundering', 'humanTrafficking', 'assisting terrorist', 'unlawfulActivity', 'fraud', 'childAbduction', 'deportation', 'visaViolation', 'mentalDisorder', 'drugAbuse', 'communicableDisease', 'publicCharge']
+      },
+      {
+        title: 'Student Information',
+        icon: '📚',
+        fields: ['studentExchange', 'sevisId', 'programNumber', 'schoolName', 'schoolAddress', 'courseOfStudy', 'academicTerm', 'fundingSource']
+      }
+    ];
+    
+    return sections.map(section => ({
+      ...section,
+      fields: section.fields.map(fieldName => ({
+        key: fieldName,
+        value: formData[fieldName]
+      })).filter(field => field.value) // Only show fields with values
+    })).filter(section => section.fields.length > 0); // Only show sections with data
+  }
+  
+  function formatFieldLabel(fieldName) {
+    // Convert camelCase to readable labels
+    const labelMap = {
+      'surnames': 'Surnames (Family Names)',
+      'givenNames': 'Given Names (First Names)', 
+      'nativeAlphabetName': 'Name in Native Alphabet',
+      'usedOtherNames': 'Used Other Names',
+      'dobDay': 'Birth Day',
+      'dobMonth': 'Birth Month', 
+      'dobYear': 'Birth Year',
+      'birthCity': 'City of Birth',
+      'birthCountry': 'Country of Birth',
+      'otherNationality': 'Other Nationality',
+      'nationalIdNumber': 'National ID Number',
+      'usSsn': 'U.S. Social Security Number',
+      'usTin': 'U.S. Taxpayer ID Number',
+      'homeAddress': 'Home Address',
+      'homeCity': 'Home City',
+      'homeState': 'Home State/Province',
+      'homePostal': 'Home Postal Code', 
+      'homeCountry': 'Home Country',
+      'homePhone': 'Home Phone',
+      'workPhone': 'Work Phone',
+      'cellPhone': 'Cell Phone',
+      'mailingAddress': 'Mailing Address',
+      'passportNumber': 'Passport Number',
+      'passportType': 'Passport Type',
+      'passportIssueDate': 'Passport Issue Date',
+      'passportExpDate': 'Passport Expiration Date',
+      'passportIssueCountry': 'Passport Issuing Country',
+      'passportIssueCity': 'Passport Issuing City',
+      'passportLostStolen': 'Passport Lost/Stolen',
+      'usContactName': 'U.S. Contact Name',
+      'usContactOrg': 'U.S. Contact Organization',
+      'usContactAddress': 'U.S. Contact Address',
+      'usContactCity': 'U.S. Contact City',
+      'usContactState': 'U.S. Contact State',
+      'usContactZip': 'U.S. Contact ZIP Code',
+      'usContactPhone': 'U.S. Contact Phone',
+      'usContactEmail': 'U.S. Contact Email',
+      'usContactRelation': 'Relationship to U.S. Contact',
+      'fatherName': 'Father\'s Name',
+      'fatherDob': 'Father\'s Date of Birth',
+      'fatherBirthCountry': 'Father\'s Country of Birth',
+      'fatherCountry': 'Father\'s Current Country',
+      'motherName': 'Mother\'s Name',
+      'motherDob': 'Mother\'s Date of Birth',
+      'motherBirthCountry': 'Mother\'s Country of Birth',
+      'motherCountry': 'Mother\'s Current Country',
+      'spouseName': 'Spouse\'s Name',
+      'spouseDob': 'Spouse\'s Date of Birth',
+      'spouseBirthCountry': 'Spouse\'s Country of Birth',
+      'spouseCountry': 'Spouse\'s Current Country',
+      'currentOccupation': 'Current Occupation',
+      'currentEmployer': 'Current Employer',
+      'currentWorkAddress': 'Current Work Address',
+      'currentSalary': 'Current Salary',
+      'workStartDate': 'Work Start Date',
+      'previousWork': 'Previous Work Experience',
+      'schoolName': 'School Name',
+      'schoolAddress': 'School Address',
+      'courseOfStudy': 'Course of Study',
+      'attendanceDate': 'Attendance Date',
+      'travelingWithOthers': 'Traveling with Others',
+      'companionName': 'Companion Name',
+      'companionRelation': 'Companion Relationship',
+      'groupTravel': 'Group Travel',
+      'groupName': 'Group Name',
+      'sevisId': 'SEVIS ID',
+      'programNumber': 'Program Number',
+      'academicTerm': 'Academic Term',
+      'fundingSource': 'Funding Source'
+    };
+    
+    return labelMap[fieldName] || fieldName.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+  }
+  
+  function generateStatsSection(formData) {
+    const totalFields = Object.keys(formData).length;
+    const filledFields = Object.values(formData).filter(val => val && String(val).trim() !== '').length;
+    const completionPercentage = Math.round((filledFields / totalFields) * 100);
+    
+    return `
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-number">${totalFields}</div>
+          <div class="stat-label">Total Fields</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">${filledFields}</div>
+          <div class="stat-label">Fields Completed</div>
+        </div>
+        <div class="stat">
+          <div class="stat-number">${completionPercentage}%</div>
+          <div class="stat-label">Completion Rate</div>
+        </div>
+      </div>
+    `;
   }
   
   // Authentication event listeners
