@@ -15,6 +15,7 @@
       <h1>DS-160 Intake Form</h1>
     </div>
     <div class="app-header-right">
+      <button id="adminDashboardBtn" type="button" title="Admin Dashboard" style="display: none;">Admin Dashboard</button>
       <button id="exportBtn" type="button" title="Export as PDF">Export PDF</button>
       <div id="userSection" class="user-section">
         <div id="userInfo" class="user-info" style="display:none;">
@@ -826,6 +827,35 @@
         
         <div class="nav">
           <button type="button" class="back" data-back="location">Back</button>
+        </div>
+      </section>
+
+      <!-- Admin Dashboard Section -->
+      <section id="section-admin" class="form-section" data-section="admin" style="display: none;">
+        <div class="admin-header">
+          <h2>Admin Dashboard</h2>
+          <p>Manage all DS-160 form submissions and system data</p>
+        </div>
+        
+        <div class="admin-stats" id="adminStats">
+          <!-- Stats will be populated by JavaScript -->
+        </div>
+        
+        <div class="admin-controls">
+          <button id="refreshFormsBtn" type="button" class="admin-btn">🔄 Refresh Forms</button>
+          <button id="exportAllBtn" type="button" class="admin-btn">📤 Export All Data</button>
+          <button id="clearAllBtn" type="button" class="admin-btn danger">🗑️ Clear All Data</button>
+        </div>
+        
+        <div class="admin-content">
+          <h3>Form Submissions</h3>
+          <div id="adminFormsList" class="admin-forms-list">
+            <!-- Forms list will be populated by JavaScript -->
+          </div>
+        </div>
+        
+        <div class="nav">
+          <button type="button" class="back" data-back="preview">Back to Preview</button>
         </div>
       </section>
 

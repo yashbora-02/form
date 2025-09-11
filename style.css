@@ -2376,4 +2376,217 @@ body:has(.sign-in-page:not([style*="display: none"])) .app-header {
   }
 }
 
+/* Admin Dashboard Styles */
+/* Ensure admin section is visible when active */
+.form-section[data-section="admin"].active {
+  display: block !important;
+}
+
+/* Override print CSS hiding of admin elements */
+.form-section[data-section="admin"] .admin-controls {
+  display: flex !important;
+}
+
+.form-section[data-section="admin"] .form-actions {
+  display: flex !important;
+}
+
+.form-section[data-section="admin"] button {
+  display: inline-block !important;
+}
+
+.admin-header {
+  margin-bottom: 24px;
+}
+
+.admin-header h2 {
+  color: var(--primary-blue);
+  margin-bottom: 8px;
+}
+
+.admin-header p {
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.admin-stat-card {
+  background: var(--surface);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  border: 1px solid var(--border);
+}
+
+.admin-stat-card .stat-number {
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--primary-blue);
+  margin-bottom: 8px;
+}
+
+.admin-stat-card .stat-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.admin-controls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.admin-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--primary-blue);
+  color: white;
+}
+
+.admin-btn:hover {
+  background: var(--primary-blue-hover);
+  box-shadow: var(--shadow-hover);
+}
+
+.admin-btn.danger {
+  background: var(--error);
+}
+
+.admin-btn.danger:hover {
+  background: #b52d20;
+}
+
+.admin-content h3 {
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  font-size: 18px;
+}
+
+.admin-forms-list {
+  display: grid;
+  gap: 16px;
+}
+
+.admin-form-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+  transition: all 0.2s ease;
+}
+
+.admin-form-card:hover {
+  box-shadow: var(--shadow-hover);
+  border-color: var(--primary-blue);
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.form-header h4 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 16px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.form-actions button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: var(--primary-blue);
+  color: white;
+}
+
+.form-actions button:hover {
+  opacity: 0.9;
+}
+
+.form-actions button.danger {
+  background: var(--error);
+}
+
+.form-details {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.form-details span {
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--background);
+  padding: 4px 8px;
+  border-radius: 12px;
+}
+
+.form-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+
+.form-preview span {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.form-preview strong {
+  color: var(--text-primary);
+}
+
+.no-forms {
+  text-align: center;
+  padding: 40px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-secondary);
+}
+
+.no-forms h3 {
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
 

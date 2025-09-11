@@ -40,8 +40,8 @@
   function isAdmin(user) {
     if (!user) return false;
     
-    // Only this email is authorized for admin access
-    const adminEmails = ['yashbora.ai@gmail.com'];
+    // Only these emails are authorized for admin access
+    const adminEmails = ['yashbora.ai@gmail.com', 'vaibhav@chhajed.ai'];
     const adminUIDs = []; // Add your specific UIDs if known
     
     // Check by email
@@ -210,6 +210,7 @@
     const signInPage = document.getElementById('signInPage');
     const mainApp = document.getElementById('mainApp');
     const appHeader = document.querySelector('.app-header');
+    const adminDashboardBtn = document.getElementById('adminDashboardBtn');
     
     if (user) {
       // Check if this is a pending admin access attempt
@@ -280,6 +281,16 @@
         uid: user.uid
       });
       userName.textContent = user.displayName || user.email || `Anonymous User`;
+      
+      // Show/hide admin dashboard button in header based on admin status
+      if (adminDashboardBtn) {
+        if (isAdmin(user)) {
+          adminDashboardBtn.style.display = 'block';
+          console.log('✅ Admin dashboard button visible for:', user.email);
+        } else {
+          adminDashboardBtn.style.display = 'none';
+        }
+      }
     } else {
       // User is signed out - show sign-in page
       console.log('🔒 User not authenticated - showing sign-in page');
@@ -290,6 +301,11 @@
       userInfo.style.display = 'none';
       authButtons.style.display = 'flex';
       signOutBtn.style.display = 'none';
+      
+      // Hide admin dashboard button when signed out
+      if (adminDashboardBtn) {
+        adminDashboardBtn.style.display = 'none';
+      }
     }
   }
   
@@ -310,6 +326,29 @@
     sections.forEach(s=>s.classList.toggle('active', s.dataset.section===id));
     navButtons.forEach(b=>b.classList.toggle('active', b.dataset.target===id));
     if(id==='preview') renderPreview();
+    if(id==='admin') {
+      // Ensure admin section is properly visible
+      const adminSection = document.getElementById('section-admin');
+      if (adminSection) {
+        adminSection.style.display = 'block';
+      }
+      
+      // Automatically load forms data when admin section is shown
+      if (currentUser && isAdmin(currentUser)) {
+        loadAllForms();
+      } else {
+        console.log('❌ Admin access denied or not signed in');
+        // Show unauthorized message in admin dashboard
+        const statsDiv = document.getElementById('adminStats');
+        const formsListDiv = document.getElementById('adminFormsList');
+        if (statsDiv) {
+          statsDiv.innerHTML = '<div class="no-forms"><h3>Access Denied</h3><p>You must be signed in as an admin to view this section.</p></div>';
+        }
+        if (formsListDiv) {
+          formsListDiv.innerHTML = '';
+        }
+      }
+    }
   }
 
   document.body.addEventListener('click', (e)=>{
@@ -939,8 +978,27 @@
     }
     
     if (!firebaseReady) {
-      updateFirebaseStatus('❌ Firebase not ready', 'error');
+      console.log('❌ Firebase not ready, showing placeholder');
+      // Show loading state in admin dashboard
+      const statsDiv = document.getElementById('adminStats');
+      const formsListDiv = document.getElementById('adminFormsList');
+      if (statsDiv) {
+        statsDiv.innerHTML = '<div class="loading">Firebase is connecting...</div>';
+      }
+      if (formsListDiv) {
+        formsListDiv.innerHTML = '<div class="loading">Loading forms data...</div>';
+      }
       return;
+    }
+    
+    // Show loading state
+    const statsDiv = document.getElementById('adminStats');
+    const formsListDiv = document.getElementById('adminFormsList');
+    if (statsDiv) {
+      statsDiv.innerHTML = '<div class="loading">Loading statistics...</div>';
+    }
+    if (formsListDiv) {
+      formsListDiv.innerHTML = '<div class="loading">Loading forms...</div>';
     }
     
     try {
@@ -967,6 +1025,11 @@
     const statsDiv = document.getElementById('adminStats');
     const formsListDiv = document.getElementById('adminFormsList');
     
+    if (!statsDiv || !formsListDiv) {
+      console.error('❌ Admin dashboard elements not found!');
+      return;
+    }
+    
     // Render stats
     const totalForms = forms.length;
     const recentForms = forms.filter(f => {
@@ -975,7 +1038,7 @@
       return formDate > dayAgo;
     }).length;
     
-    statsDiv.innerHTML = `
+    const statsHTML = `
       <div class="admin-stat-card">
         <div class="stat-number">${totalForms}</div>
         <div class="stat-label">Total Forms</div>
@@ -985,6 +1048,8 @@
         <div class="stat-label">Last 24h</div>
       </div>
     `;
+    
+    statsDiv.innerHTML = statsHTML;
     
     // Render forms list
     if (forms.length === 0) {
@@ -997,29 +1062,49 @@
       return;
     }
     
-    formsListDiv.innerHTML = forms.map((form, index) => {
+    const formsListHTML = forms.map((form, index) => {
       const date = form.lastModified ? new Date(form.lastModified).toLocaleString() : 'Unknown';
-      const fieldsCount = Object.keys(form).filter(key => 
-        !['id', 'timestamp', 'lastModified', 'confirmed'].includes(key)
-      ).length;
+      const { timestamp, lastModified, confirmed, userId, userEmail, userName, isShared, shareId, ...formData } = form;
+      const fieldsCount = Object.keys(formData).length;
+      const filledFields = Object.values(formData).filter(val => val && String(val).trim() !== '').length;
+      
+      // Determine display name priority: form name > user name > email > anonymous
+      let displayName = 'Anonymous User';
+      if (formData.surnames && formData.givenNames) {
+        displayName = `${formData.givenNames} ${formData.surnames}`;
+      } else if (formData.surnames) {
+        displayName = formData.surnames;
+      } else if (userName && userName !== 'Anonymous User') {
+        displayName = userName;
+      } else if (userEmail) {
+        displayName = userEmail.split('@')[0]; // Use email username part
+      }
       
       return `
         <div class="admin-form-card" data-form-id="${form.id}">
           <div class="form-header">
-            <h4>Form #${index + 1}</h4>
+            <h4>📋 ${displayName}</h4>
             <div class="form-actions">
-              <button class="view-form" data-form-id="${form.id}">👁️ View</button>
+              <button class="view-form" data-form-id="${form.id}">👁️ View Details</button>
               <button class="delete-form danger" data-form-id="${form.id}">🗑️ Delete</button>
             </div>
           </div>
           <div class="form-details">
+            <span>👤 ${userEmail || 'No email provided'}</span>
             <span>📅 ${date}</span>
-            <span>📝 ${fieldsCount} fields</span>
-            <span>ID: ${form.id.substring(0, 8)}...</span>
+            <span>📝 ${filledFields}/${fieldsCount} fields filled</span>
+            <span>🆔 ${form.id.substring(0, 8)}...</span>
+          </div>
+          <div class="form-preview">
+            ${formData.surnames ? `<span><strong>Form Name:</strong> ${formData.surnames}, ${formData.givenNames || 'N/A'}</span>` : ''}
+            ${formData.nationality ? `<span><strong>Nationality:</strong> ${formData.nationality}</span>` : ''}
+            ${formData.purpose ? `<span><strong>Purpose:</strong> ${formData.purpose}</span>` : ''}
           </div>
         </div>
       `;
     }).join('');
+    
+    formsListDiv.innerHTML = formsListHTML;
   }
   
   async function deleteForm(formId) {
@@ -1536,6 +1621,12 @@
   // Admin control buttons
   document.getElementById('refreshFormsBtn')?.addEventListener('click', loadAllForms);
   document.getElementById('exportAllBtn')?.addEventListener('click', exportAllData);
+  
+  // Admin dashboard button in header
+  document.getElementById('adminDashboardBtn')?.addEventListener('click', () => {
+    showSection('admin');
+    loadAllForms();
+  });
   document.getElementById('clearAllBtn')?.addEventListener('click', async () => {
     if (!confirm('⚠️ WARNING: This will delete ALL forms from Firebase. This action cannot be undone!\n\nAre you absolutely sure?')) {
       return;
