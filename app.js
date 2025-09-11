@@ -1083,20 +1083,20 @@
       return `
         <div class="admin-form-card" data-form-id="${form.id}">
           <div class="form-header">
-            <h4>📋 ${displayName}</h4>
+            <h4>${displayName}</h4>
             <div class="form-actions">
-              <button class="view-form" data-form-id="${form.id}">👁️ View Details</button>
-              <button class="delete-form danger" data-form-id="${form.id}">🗑️ Delete</button>
+              <button class="view-form" data-form-id="${form.id}">View Details</button>
+              <button class="delete-form danger" data-form-id="${form.id}">Delete</button>
             </div>
           </div>
           <div class="form-details">
-            <span>👤 ${userEmail || 'No email provided'}</span>
-            <span>📅 ${date}</span>
-            <span>📝 ${filledFields}/${fieldsCount} fields filled</span>
-            <span>🆔 ${form.id.substring(0, 8)}...</span>
+            <span>Email: ${userEmail || 'No email provided'}</span>
+            <span>Date: ${date}</span>
+            <span>Progress: ${filledFields}/${fieldsCount} fields</span>
+            <span>ID: ${form.id.substring(0, 8)}...</span>
           </div>
           <div class="form-preview">
-            ${formData.surnames ? `<span><strong>Form Name:</strong> ${formData.surnames}, ${formData.givenNames || 'N/A'}</span>` : ''}
+            ${formData.surnames ? `<span><strong>Applicant:</strong> ${formData.surnames}, ${formData.givenNames || 'N/A'}</span>` : ''}
             ${formData.nationality ? `<span><strong>Nationality:</strong> ${formData.nationality}</span>` : ''}
             ${formData.purpose ? `<span><strong>Purpose:</strong> ${formData.purpose}</span>` : ''}
           </div>
@@ -1429,6 +1429,18 @@
       if (formData) {
         const { timestamp, lastModified, confirmed, userId, userEmail, userName, isShared, shareId, ...cleanData } = formData;
         
+        // Determine display name using same logic as admin dashboard
+        let displayName = 'Anonymous User';
+        if (cleanData.surnames && cleanData.givenNames) {
+          displayName = `${cleanData.givenNames} ${cleanData.surnames}`;
+        } else if (cleanData.surnames) {
+          displayName = cleanData.surnames;
+        } else if (userName && userName !== 'Anonymous User') {
+          displayName = userName;
+        } else if (userEmail) {
+          displayName = userEmail.split('@')[0];
+        }
+        
         // Organize form data by sections
         const sections = organizeFormDataBySections(cleanData);
         
@@ -1553,18 +1565,18 @@
           </head>
           <body>
             <div class="container">
-              <button class="print-btn" onclick="window.print()">🖨️ Print</button>
+              <button class="print-btn" onclick="window.print()">Print</button>
               
               <div class="header">
-                <h1>📋 DS-160 Form Submission</h1>
+                <h1>DS-160 Form Submission</h1>
                 <div class="header-info">
                   <div>
-                    <p><strong>👤 Applicant:</strong> ${userName || 'Anonymous User'}</p>
-                    <p><strong>📧 Email:</strong> ${userEmail || 'Not provided'}</p>
+                    <p><strong>Applicant:</strong> ${displayName}</p>
+                    <p><strong>Email:</strong> ${userEmail || 'Not provided'}</p>
                   </div>
                   <div>
-                    <p><strong>📅 Last Modified:</strong> ${new Date(lastModified).toLocaleString()}</p>
-                    <p><strong>🆔 Form ID:</strong> ${formId}</p>
+                    <p><strong>Last Modified:</strong> ${new Date(lastModified).toLocaleString()}</p>
+                    <p><strong>Form ID:</strong> ${formId}</p>
                   </div>
                 </div>
               </div>
@@ -1574,7 +1586,7 @@
               ${sections.map(section => `
                 <div class="section">
                   <div class="section-header">
-                    ${section.icon} ${section.title}
+                    ${section.title}
                   </div>
                   <div class="section-content">
                     <div class="field-grid">
@@ -1609,52 +1621,42 @@
     const sections = [
       {
         title: 'Personal Information',
-        icon: '👤',
         fields: ['surnames', 'givenNames', 'nativeAlphabetName', 'usedOtherNames', 'gender', 'maritalStatus', 'dobDay', 'dobMonth', 'dobYear', 'birthCity', 'birthCountry', 'nationality', 'otherNationality', 'nationalIdNumber', 'usSsn', 'usTin']
       },
       {
-        title: 'Travel Information', 
-        icon: '✈️',
+        title: 'Travel Information',
         fields: ['purpose', 'specificPlans', 'arrivalDate', 'departureDate', 'stayDuration', 'visitedUsBefore', 'previousVisitDetails', 'usVisaRefused', 'refusalReason']
       },
       {
-        title: 'Address & Contact',
-        icon: '📍', 
+        title: 'Address & Contact Information',
         fields: ['homeAddress', 'homeCity', 'homeState', 'homePostal', 'homeCountry', 'homePhone', 'workPhone', 'cellPhone', 'email', 'mailingAddress']
       },
       {
         title: 'Passport Information',
-        icon: '📘',
         fields: ['passportNumber', 'passportType', 'passportIssueDate', 'passportExpDate', 'passportIssueCountry', 'passportIssueCity', 'passportLostStolen']
       },
       {
         title: 'U.S. Contact Information',
-        icon: '🇺🇸',
         fields: ['usContactName', 'usContactOrg', 'usContactAddress', 'usContactCity', 'usContactState', 'usContactZip', 'usContactPhone', 'usContactEmail', 'usContactRelation']
       },
       {
-        title: 'Family Information', 
-        icon: '👨‍👩‍👧‍👦',
+        title: 'Family Information',
         fields: ['fatherName', 'fatherDob', 'fatherBirthCountry', 'fatherCountry', 'motherName', 'motherDob', 'motherBirthCountry', 'motherCountry', 'spouseName', 'spouseDob', 'spouseBirthCountry', 'spouseCountry']
       },
       {
-        title: 'Work & Education',
-        icon: '🎓',
+        title: 'Work & Education History',
         fields: ['currentOccupation', 'currentEmployer', 'currentWorkAddress', 'currentSalary', 'workStartDate', 'previousWork', 'education', 'schoolName', 'schoolAddress', 'courseOfStudy', 'attendanceDate']
       },
       {
         title: 'Travel Companions',
-        icon: '👥',
         fields: ['travelingWithOthers', 'companionName', 'companionRelation', 'groupTravel', 'groupName']
       },
       {
         title: 'Security Questions',
-        icon: '🔒',
-        fields: ['criminalActivity', 'drugTrafficking', 'espionage', 'genocide', 'terrorism', 'money laundering', 'humanTrafficking', 'assisting terrorist', 'unlawfulActivity', 'fraud', 'childAbduction', 'deportation', 'visaViolation', 'mentalDisorder', 'drugAbuse', 'communicableDisease', 'publicCharge']
+        fields: ['criminalActivity', 'drugTrafficking', 'espionage', 'genocide', 'terrorism', 'moneyLaundering', 'humanTrafficking', 'assistingTerrorist', 'unlawfulActivity', 'fraud', 'childAbduction', 'deportation', 'visaViolation', 'mentalDisorder', 'drugAbuse', 'communicableDisease', 'publicCharge']
       },
       {
         title: 'Student Information',
-        icon: '📚',
         fields: ['studentExchange', 'sevisId', 'programNumber', 'schoolName', 'schoolAddress', 'courseOfStudy', 'academicTerm', 'fundingSource']
       }
     ];
