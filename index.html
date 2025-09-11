@@ -173,7 +173,7 @@
 
     <section class="content">
       <!-- Personal 1 -->
-      <form id="form-personal1" class="form-section active" data-section="personal1">
+      <form id="form-personal1" class="form-section active" data-section="personal1" novalidate>
         <h2>Personal Information 1</h2>
         <div class="grid">
           <label>
@@ -240,7 +240,7 @@
           <fieldset class="full">
             <legend>Date of Birth</legend>
             <div class="dob">
-              <label>Day<input name="dobDay" inputmode="numeric" maxlength="2"></label>
+              <label>Day<input name="dobDay" maxlength="2"></label>
               <label>Month
                 <select name="dobMonth">
                   <option value="">MM</option>
@@ -249,7 +249,7 @@
                   <option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option>
                 </select>
               </label>
-              <label>Year<input name="dobYear" inputmode="numeric" maxlength="4"></label>
+              <label>Year<input name="dobYear" maxlength="4"></label>
             </div>
           </fieldset>
           <label class="full">
@@ -271,7 +271,7 @@
       </form>
 
       <!-- Personal 2 -->
-      <form id="form-personal2" class="form-section" data-section="personal2">
+      <form id="form-personal2" class="form-section" data-section="personal2" novalidate>
         <h2>Personal Information 2</h2>
         <div class="grid">
           <label>
@@ -319,7 +319,7 @@
       </form>
 
       <!-- Travel -->
-      <form id="form-travel" class="form-section" data-section="travel">
+      <form id="form-travel" class="form-section" data-section="travel" novalidate>
         <h2>Travel Information</h2>
         <div class="grid">
           <label>
@@ -349,7 +349,7 @@
               <fieldset class="full">
                 <legend>Intended Date of Departure</legend>
                 <div class="dob">
-                  <label>Day<input name="departureDay" inputmode="numeric" maxlength="2"></label>
+                  <label>Day<input name="departureDay" maxlength="2"></label>
                   <label>Month
                     <select name="departureMonth">
                       <option value="">MM</option>
@@ -358,7 +358,7 @@
                       <option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option>
                     </select>
                   </label>
-                  <label>Year<input name="departureYear" inputmode="numeric" maxlength="4"></label>
+                  <label>Year<input name="departureYear" maxlength="4"></label>
                 </div>
               </fieldset>
               <label class="full">Flight Number/Carrier<input name="flightNumber"></label>
@@ -369,7 +369,7 @@
           <fieldset class="full">
             <legend>Intended Date of Arrival</legend>
             <div class="dob">
-              <label>Day<input name="arrivalDay" inputmode="numeric" maxlength="2"></label>
+              <label>Day<input name="arrivalDay" maxlength="2"></label>
               <label>Month
                 <select name="arrivalMonth">
                   <option value="">MM</option>
@@ -378,12 +378,12 @@
                   <option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option>
                 </select>
               </label>
-              <label>Year<input name="arrivalYear" inputmode="numeric" maxlength="4"></label>
+              <label>Year<input name="arrivalYear" maxlength="4"></label>
             </div>
           </fieldset>
           <label>
             Intended Length of Stay in U.S. (Years)
-            <input name="stayYears" inputmode="numeric" placeholder="e.g., 2">
+            <input name="stayYears" placeholder="e.g., 2">
           </label>
 
           <h3 class="full">Address Where You Will Stay in the U.S.</h3>
@@ -405,7 +405,7 @@
           </label>
           <label>
             ZIP Code
-            <input name="usZip" inputmode="numeric">
+            <input name="usZip" >
           </label>
           <label class="full">
             Person/Entity Paying for Your Trip
@@ -423,7 +423,7 @@
       </form>
 
       <!-- Travel Companions -->
-      <form id="form-companions" class="form-section" data-section="companions">
+      <form id="form-companions" class="form-section" data-section="companions" novalidate>
         <h2>Travel Companions</h2>
         <div class="grid">
           <fieldset class="full">
@@ -466,7 +466,7 @@
       </form>
 
       <!-- Address & Phone -->
-      <form id="form-addrphone" class="form-section" data-section="addrphone">
+      <form id="form-addrphone" class="form-section" data-section="addrphone" novalidate>
         <h2>Address and Phone Information</h2>
         <div class="grid">
           <h3 class="full">Home Address</h3>
@@ -574,7 +574,7 @@
       </form>
 
       <!-- Passport -->
-      <form id="form-passport" class="form-section" data-section="passport">
+      <form id="form-passport" class="form-section" data-section="passport" novalidate>
         <h2>Passport Information</h2>
         <div class="grid">
           <label>Passport/Travel Document Type<select name="passportType"><option>REGULAR</option><option>OFFICIAL</option><option>DIPLOMATIC</option></select></label>
@@ -586,10 +586,10 @@
           <label>State/Province<input name="passportIssueState"></label>
           <label>Country/Region<input name="passportIssueCountry" list="countries"></label>
           <fieldset class="full"><legend>Issuance Date</legend>
-            <div class="dob"><label>Day<input name="passportIssueDay" inputmode="numeric" maxlength="2"></label><label>Month<select name="passportIssueMonth"><option></option><option>JAN</option><option>FEB</option><option>MAR</option><option>APR</option><option>MAY</option><option>JUN</option><option>JUL</option><option>AUG</option><option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option></select></label><label>Year<input name="passportIssueYear" inputmode="numeric" maxlength="4"></label></div>
+            <div class="dob"><label>Day<input name="passportIssueDay" maxlength="2"></label><label>Month<select name="passportIssueMonth"><option></option><option>JAN</option><option>FEB</option><option>MAR</option><option>APR</option><option>MAY</option><option>JUN</option><option>JUL</option><option>AUG</option><option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option></select></label><label>Year<input name="passportIssueYear" maxlength="4"></label></div>
           </fieldset>
           <fieldset class="full"><legend>Expiration Date</legend>
-            <div class="dob"><label>Day<input name="passportExpDay" inputmode="numeric" maxlength="2"></label><label>Month<select name="passportExpMonth"><option></option><option>JAN</option><option>FEB</option><option>MAR</option><option>APR</option><option>MAY</option><option>JUN</option><option>JUL</option><option>AUG</option><option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option></select></label><label>Year<input name="passportExpYear" inputmode="numeric" maxlength="4"></label></div>
+            <div class="dob"><label>Day<input name="passportExpDay" maxlength="2"></label><label>Month<select name="passportExpMonth"><option></option><option>JAN</option><option>FEB</option><option>MAR</option><option>APR</option><option>MAY</option><option>JUN</option><option>JUL</option><option>AUG</option><option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option></select></label><label>Year<input name="passportExpYear" maxlength="4"></label></div>
           </fieldset>
           <fieldset class="full"><legend>Have you ever lost a passport or had one stolen?</legend><div class="inline"><label><input type="radio" name="lostPassport" value="yes"> Yes</label><label><input type="radio" name="lostPassport" value="no" checked> No</label></div></fieldset>
         </div>
@@ -597,7 +597,7 @@
       </form>
 
       <!-- U.S. Contact -->
-      <form id="form-uscontact" class="form-section" data-section="uscontact">
+      <form id="form-uscontact" class="form-section" data-section="uscontact" novalidate>
         <h2>U.S. Point of Contact Information</h2>
         <div class="grid">
           <label>Surnames<input name="usContactSurname"></label>
@@ -617,19 +617,19 @@
       </form>
 
       <!-- Family -->
-      <form id="form-family" class="form-section" data-section="family">
+      <form id="form-family" class="form-section" data-section="family" novalidate>
         <h2>Family Information: Relatives</h2>
         <div class="grid">
           <h3 class="full">Father</h3>
           <label>Surnames<input name="fatherSurname"></label>
           <label>Given Names<input name="fatherGiven"></label>
-          <fieldset class="full"><legend>Father's Date of Birth</legend><div class="dob"><label>Day<input name="fatherDobDay" maxlength="2" inputmode="numeric"></label><label>Month<select name="fatherDobMonth"><option></option><option>JAN</option><option>FEB</option><option>MAR</option><option>APR</option><option>MAY</option><option>JUN</option><option>JUL</option><option>AUG</option><option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option></select></label><label>Year<input name="fatherDobYear" maxlength="4" inputmode="numeric"></label></div></fieldset>
+          <fieldset class="full"><legend>Father's Date of Birth</legend><div class="dob"><label>Day<input name="fatherDobDay" maxlength="2" ></label><label>Month<select name="fatherDobMonth"><option></option><option>JAN</option><option>FEB</option><option>MAR</option><option>APR</option><option>MAY</option><option>JUN</option><option>JUL</option><option>AUG</option><option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option></select></label><label>Year<input name="fatherDobYear" maxlength="4" ></label></div></fieldset>
           <fieldset class="full"><legend>Is your father in the U.S.?</legend><div class="inline"><label><input type="radio" name="fatherInUS" value="yes"> Yes</label><label><input type="radio" name="fatherInUS" value="no" checked> No</label></div></fieldset>
 
           <h3 class="full">Mother</h3>
           <label>Surnames<input name="motherSurname"></label>
           <label>Given Names<input name="motherGiven"></label>
-          <fieldset class="full"><legend>Mother's Date of Birth</legend><div class="dob"><label>Day<input name="motherDobDay" maxlength="2" inputmode="numeric"></label><label>Month<select name="motherDobMonth"><option></option><option>JAN</option><option>FEB</option><option>MAR</option><option>APR</option><option>MAY</option><option>JUN</option><option>JUL</option><option>AUG</option><option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option></select></label><label>Year<input name="motherDobYear" maxlength="4" inputmode="numeric"></label></div></fieldset>
+          <fieldset class="full"><legend>Mother's Date of Birth</legend><div class="dob"><label>Day<input name="motherDobDay" maxlength="2" ></label><label>Month<select name="motherDobMonth"><option></option><option>JAN</option><option>FEB</option><option>MAR</option><option>APR</option><option>MAY</option><option>JUN</option><option>JUL</option><option>AUG</option><option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option></select></label><label>Year<input name="motherDobYear" maxlength="4" ></label></div></fieldset>
           <fieldset class="full"><legend>Is your mother in the U.S.?</legend><div class="inline"><label><input type="radio" name="motherInUS" value="yes"> Yes</label><label><input type="radio" name="motherInUS" value="no" checked> No</label></div></fieldset>
 
           <fieldset class="full"><legend>Immediate relatives in the U.S.?</legend><div class="inline"><label><input type="radio" name="immediateRelativesUS" value="yes"> Yes</label><label><input type="radio" name="immediateRelativesUS" value="no" checked> No</label></div></fieldset>
@@ -639,7 +639,7 @@
       </form>
 
       <!-- Work/Education: Present -->
-      <form id="form-workpresent" class="form-section" data-section="workpresent">
+      <form id="form-workpresent" class="form-section" data-section="workpresent" novalidate>
         <h2>Present Work/Education/Training</h2>
         <div class="grid">
           <label class="full">Primary Occupation<select name="primaryOccupation"><option value="">- SELECT ONE -</option><option>EDUCATION</option><option>ENGINEERING</option><option>BUSINESS</option><option>STUDENT</option><option>OTHER</option></select></label>
@@ -651,7 +651,7 @@
           <label>State/Province<input name="presentState"></label>
           <label>Postal Zone/ZIP Code<input name="presentZip"></label>
           <label>Country/Region<input name="presentCountry" list="countries"></label>
-          <fieldset class="full"><legend>Start Date</legend><div class="dob"><label>Day<input name="presentStartDay" maxlength="2" inputmode="numeric"></label><label>Month<select name="presentStartMonth"><option></option><option>JAN</option><option>FEB</option><option>MAR</option><option>APR</option><option>MAY</option><option>JUN</option><option>JUL</option><option>AUG</option><option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option></select></label><label>Year<input name="presentStartYear" maxlength="4" inputmode="numeric"></label></div></fieldset>
+          <fieldset class="full"><legend>Start Date</legend><div class="dob"><label>Day<input name="presentStartDay" maxlength="2" ></label><label>Month<select name="presentStartMonth"><option></option><option>JAN</option><option>FEB</option><option>MAR</option><option>APR</option><option>MAY</option><option>JUN</option><option>JUL</option><option>AUG</option><option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option></select></label><label>Year<input name="presentStartYear" maxlength="4" ></label></div></fieldset>
           <label>Work Phone Number<input name="presentWorkPhone"></label>
           <label>Monthly Income in Local Currency<input name="presentMonthlyIncome"></label>
           <label class="full">Briefly describe your duties<textarea name="presentDuties"></textarea></label>
@@ -660,7 +660,7 @@
       </form>
 
       <!-- Work/Education: Previous -->
-      <form id="form-workprevious" class="form-section" data-section="workprevious">
+      <form id="form-workprevious" class="form-section" data-section="workprevious" novalidate>
         <h2>Previous Work/Education</h2>
         <div class="grid">
           <fieldset class="full"><legend>Were you previously employed?</legend><div class="inline"><label><input type="radio" name="prevEmployed" value="yes" onchange="togglePreviousWorkEducation()"> Yes</label><label><input type="radio" name="prevEmployed" value="no" checked onchange="togglePreviousWorkEducation()"> No</label></div></fieldset>
@@ -676,8 +676,8 @@
                 <label>Postal Zone/ZIP Code<input name="schoolZip"></label>
                 <label>Country/Region<input name="schoolCountry" list="countries"></label>
                 <label class="full">Course of Study<input name="schoolCourse"></label>
-                <fieldset class="full"><legend>Date of Attendance From</legend><div class="dob"><label>Day<input name="schoolFromDay" maxlength="2" inputmode="numeric"></label><label>Month<select name="schoolFromMonth"><option></option><option>JAN</option><option>FEB</option><option>MAR</option><option>APR</option><option>MAY</option><option>JUN</option><option>JUL</option><option>AUG</option><option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option></select></label><label>Year<input name="schoolFromYear" maxlength="4" inputmode="numeric"></label></div></fieldset>
-                <fieldset class="full"><legend>Date of Attendance To</legend><div class="dob"><label>Day<input name="schoolToDay" maxlength="2" inputmode="numeric"></label><label>Month<select name="schoolToMonth"><option></option><option>JAN</option><option>FEB</option><option>MAR</option><option>APR</option><option>MAY</option><option>JUN</option><option>JUL</option><option>AUG</option><option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option></select></label><label>Year<input name="schoolToYear" maxlength="4" inputmode="numeric"></label></div></fieldset>
+                <fieldset class="full"><legend>Date of Attendance From</legend><div class="dob"><label>Day<input name="schoolFromDay" maxlength="2" ></label><label>Month<select name="schoolFromMonth"><option></option><option>JAN</option><option>FEB</option><option>MAR</option><option>APR</option><option>MAY</option><option>JUN</option><option>JUL</option><option>AUG</option><option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option></select></label><label>Year<input name="schoolFromYear" maxlength="4" ></label></div></fieldset>
+                <fieldset class="full"><legend>Date of Attendance To</legend><div class="dob"><label>Day<input name="schoolToDay" maxlength="2" ></label><label>Month<select name="schoolToMonth"><option></option><option>JAN</option><option>FEB</option><option>MAR</option><option>APR</option><option>MAY</option><option>JUN</option><option>JUL</option><option>AUG</option><option>SEP</option><option>OCT</option><option>NOV</option><option>DEC</option></select></label><label>Year<input name="schoolToYear" maxlength="4" ></label></div></fieldset>
                 <div><button type="button" class="remove-row">Remove</button></div>
               </div>
             </div>
@@ -688,7 +688,7 @@
       </form>
 
       <!-- Work/Education: Additional -->
-      <form id="form-workadditional" class="form-section" data-section="workadditional">
+      <form id="form-workadditional" class="form-section" data-section="workadditional" novalidate>
         <h2>Additional Work/Education/Training Information</h2>
         <div class="grid">
           <fieldset class="full"><legend>Do you belong to a clan or tribe?</legend><div class="inline"><label><input type="radio" name="belongClan" value="yes"> Yes</label><label><input type="radio" name="belongClan" value="no" checked> No</label></div></fieldset>
@@ -724,7 +724,7 @@
       </form>
 
       <!-- Security and Background: Part 1 -->
-      <form id="form-security1" class="form-section" data-section="security1">
+      <form id="form-security1" class="form-section" data-section="security1" novalidate>
         <h2>Security and Background: Part 1</h2>
         <div class="grid">
           <fieldset class="full"><legend>Communicable disease of public health significance?</legend><div class="inline"><label><input type="radio" name="healthCommunicableDisease" value="yes"> Yes</label><label><input type="radio" name="healthCommunicableDisease" value="no" checked> No</label></div></fieldset>
@@ -736,7 +736,7 @@
       </form>
 
       <!-- Security and Background: Part 2 -->
-      <form id="form-security2" class="form-section" data-section="security2">
+      <form id="form-security2" class="form-section" data-section="security2" novalidate>
         <h2>Security and Background: Part 2</h2>
         <div class="grid">
           <fieldset class="full"><legend>Arrested or convicted for any offense or crime?</legend><div class="inline"><label><input type="radio" name="arrestedConvicted" value="yes"> Yes</label><label><input type="radio" name="arrestedConvicted" value="no" checked> No</label></div></fieldset>
@@ -748,7 +748,7 @@
       </form>
 
       <!-- Security and Background: Part 3 -->
-      <form id="form-security3" class="form-section" data-section="security3">
+      <form id="form-security3" class="form-section" data-section="security3" novalidate>
         <h2>Security and Background: Part 3</h2>
         <div class="grid">
           <fieldset class="full"><legend>Illegal activity in U.S. (espionage, sabotage, export control violations, etc.)?</legend><div class="inline"><label><input type="radio" name="illegalActivityUS" value="yes"> Yes</label><label><input type="radio" name="illegalActivityUS" value="no" checked> No</label></div></fieldset>
@@ -760,7 +760,7 @@
       </form>
 
       <!-- Security and Background: Part 4 -->
-      <form id="form-security4" class="form-section" data-section="security4">
+      <form id="form-security4" class="form-section" data-section="security4" novalidate>
         <h2>Security and Background: Part 4</h2>
         <div class="grid">
           <fieldset class="full"><legend>Sought to obtain or assist others to obtain a visa/entry by fraud or misrepresentation?</legend><div class="inline"><label><input type="radio" name="fraudMisrep" value="yes"> Yes</label><label><input type="radio" name="fraudMisrep" value="no" checked> No</label></div></fieldset>
@@ -770,7 +770,7 @@
       </form>
 
       <!-- Security and Background: Part 5 -->
-      <form id="form-security5" class="form-section" data-section="security5">
+      <form id="form-security5" class="form-section" data-section="security5" novalidate>
         <h2>Security and Background: Part 5</h2>
         <div class="grid">
           <fieldset class="full"><legend>Withheld custody of a U.S. citizen child outside the U.S. from a person granted legal custody by a U.S. court?</legend><div class="inline"><label><input type="radio" name="withheldCustody" value="yes"> Yes</label><label><input type="radio" name="withheldCustody" value="no" checked> No</label></div></fieldset>
@@ -781,7 +781,7 @@
       </form>
 
       <!-- Student/Exchange Visa (SEVIS) -->
-      <form id="form-student" class="form-section" data-section="student">
+      <form id="form-student" class="form-section" data-section="student" novalidate>
         <h2>SEVIS Information</h2>
         <div class="grid">
           <label class="full">SEVIS ID<input name="sevisId" placeholder="e.g., N0123456789"></label>
@@ -797,7 +797,7 @@
       </form>
 
       <!-- Location -->
-      <form id="form-location" class="form-section" data-section="location">
+      <form id="form-location" class="form-section" data-section="location" novalidate>
         <h2>Location</h2>
         <div class="grid">
           <label class="full">Current Location<input name="currentLocation" placeholder="e.g., MUMBAI, INDIA"></label>

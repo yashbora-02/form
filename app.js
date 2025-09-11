@@ -11,30 +11,19 @@
   // Wait for Firebase to be ready
   window.addEventListener('firebaseReady', () => {
     firebaseReady = true;
-    console.log('🔥 Firebase is ready!');
-    updateFirebaseStatus('✅ Connected to Firebase', 'connected');
     
     // Set up authentication state listener
     window.firebase.onAuthStateChanged(window.firebase.auth, (user) => {
       currentUser = user;
       updateUserUI(user);
       if (user) {
-        console.log('✅ User signed in:', user.displayName || user.uid);
         loadUserForms();
       } else {
-        console.log('❌ User signed out');
         clearUserForms();
       }
     });
   });
   
-  // Update Firebase status indicator
-  function updateFirebaseStatus(message, status = '') {
-    const statusEl = document.getElementById('firebaseStatus');
-    if (!statusEl) return; // status element removed from UI
-    statusEl.textContent = message;
-    statusEl.className = `firebase-status ${status}`;
-  }
   
   // Admin authorization - only allow specific user
   function isAdmin(user) {
@@ -57,11 +46,60 @@
     return false;
   }
   
+  // UI utility functions
+  function setUIState(config) {
+    Object.entries(config).forEach(([selector, display]) => {
+      const element = document.getElementById(selector) || document.querySelector(selector);
+      if (element) element.style.display = display;
+    });
+  }
+
+  function setSaveButtonState(state, text = '', duration = 0) {
+    const saveBtn = document.getElementById('saveBtn');
+    if (!saveBtn) return;
+    
+    const originalText = saveBtn.getAttribute('data-original-text') || saveBtn.textContent;
+    if (!saveBtn.getAttribute('data-original-text')) {
+      saveBtn.setAttribute('data-original-text', originalText);
+    }
+    
+    saveBtn.classList.remove('saving', 'saved', 'error');
+    saveBtn.disabled = false;
+    
+    switch (state) {
+      case 'saving':
+        saveBtn.classList.add('saving');
+        saveBtn.disabled = true;
+        break;
+      case 'saved':
+        saveBtn.classList.add('saved');
+        if (duration > 0) {
+          setTimeout(() => {
+            saveBtn.textContent = originalText;
+            saveBtn.disabled = false;
+            saveBtn.classList.remove('saved');
+          }, duration);
+        }
+        break;
+      case 'error':
+        saveBtn.classList.add('error');
+        if (duration > 0) {
+          setTimeout(() => {
+            saveBtn.textContent = originalText;
+            saveBtn.disabled = false;
+            saveBtn.classList.remove('error');
+          }, duration);
+        }
+        break;
+    }
+    
+    if (text) saveBtn.textContent = text;
+  }
+
   // Authentication functions
   async function signInWithGoogle() {
     try {
       const result = await window.firebase.signInWithPopup(window.firebase.auth, window.firebase.googleProvider);
-      console.log('✅ Google sign in successful:', result.user.displayName);
     } catch (error) {
       console.error('❌ Google sign in error:', error);
       alert('Sign in failed. Please try again.');
@@ -71,7 +109,6 @@
   async function signInAnonymously() {
     try {
       const result = await window.firebase.signInAnonymously(window.firebase.auth);
-      console.log('✅ Anonymous sign in successful:', result.user.uid);
     } catch (error) {
       console.error('❌ Anonymous sign in error:', error);
       alert('Anonymous sign in failed. Please try again.');
@@ -79,9 +116,6 @@
   }
   
   async function signInWithEmail(email, password) {
-    console.log('🔍 Attempting email sign in for:', email);
-    console.log('🔥 Firebase ready:', firebaseReady);
-    console.log('🔥 Firebase auth:', window.firebase?.auth);
     
     if (!firebaseReady) {
       alert('Please wait for Firebase to initialize and try again.');
@@ -90,7 +124,6 @@
     
     try {
       const result = await window.firebase.signInWithEmailAndPassword(window.firebase.auth, email, password);
-      console.log('✅ Email sign in successful:', result.user.email);
     } catch (error) {
       console.error('❌ Email sign in error:', error);
       console.error('❌ Error code:', error.code);
@@ -117,7 +150,6 @@
   }
 
   async function createNewAccount(email, password) {
-    console.log('🔍 Attempting to create new account for:', email);
     
     if (!firebaseReady) {
       alert('Please wait for Firebase to initialize and try again.');
@@ -126,7 +158,6 @@
     
     try {
       const result = await window.firebase.createUserWithEmailAndPassword(window.firebase.auth, email, password);
-      console.log('✅ Account created and signed in:', result.user.email);
       alert(`✅ Account Created Successfully!\n\nWelcome! Your account has been created and you're now signed in.\n\nYou can now start filling out your DS-160 form.`);
     } catch (error) {
       console.error('❌ Account creation error:', error);
@@ -149,7 +180,6 @@
   }
 
   async function resetPassword(email) {
-    console.log('🔍 Attempting password reset for:', email);
     
     if (!firebaseReady) {
       alert('Please wait for Firebase to initialize and try again.');
@@ -170,7 +200,6 @@
     
     try {
       await window.firebase.sendPasswordResetEmail(window.firebase.auth, email);
-      console.log('✅ Password reset email sent to:', email);
       alert(`✅ Password Reset Email Sent!\n\nWe've sent a password reset link to ${email}.\n\nPlease check your email (including spam folder) and click the link to reset your password.`);
     } catch (error) {
       console.error('❌ Password reset error:', error);
@@ -195,7 +224,6 @@
   async function signOutUser() {
     try {
       await window.firebase.signOut(window.firebase.auth);
-      console.log('✅ User signed out');
     } catch (error) {
       console.error('❌ Sign out error:', error);
     }
@@ -215,19 +243,17 @@
     if (user) {
       // Check if this is a pending admin access attempt
       if (pendingAdminAccess) {
-        console.log('🔍 Checking admin access for:', user.email);
         
         if (isAdmin(user)) {
-          console.log('✅ Admin access granted to:', user.email);
           // Show main app and go directly to admin section
-          signInPage.style.display = 'none';
-          mainApp.style.display = 'flex';
-          appHeader.style.display = 'flex';
-          
-          // Set UI for admin
-          userInfo.style.display = 'flex';
-          authButtons.style.display = 'none';
-          signOutBtn.style.display = 'block';
+          setUIState({
+            signInPage: 'none',
+            mainApp: 'flex',
+            '.app-header': 'flex',
+            userInfo: 'flex',
+            authButtons: 'none',
+            signOutBtn: 'block'
+          });
           
           if (user.photoURL) {
             userAvatar.src = user.photoURL;
@@ -245,7 +271,6 @@
           }, 500);
           
         } else {
-          console.log('❌ Admin access denied to:', user.email || 'unknown user');
           alert('❌ Access Denied\n\nYou are not authorized to access the admin dashboard.\nOnly the application owner can access this section.');
           
           // Sign out immediately and stay on sign-in page
@@ -259,14 +284,14 @@
       }
       
       // Normal user sign-in - show main app
-      console.log('✅ User authenticated - showing main app');
-      signInPage.style.display = 'none';
-      mainApp.style.display = 'flex';
-      appHeader.style.display = 'flex';
-      
-      userInfo.style.display = 'flex';
-      authButtons.style.display = 'none';
-      signOutBtn.style.display = 'block';
+      setUIState({
+        signInPage: 'none',
+        mainApp: 'flex',
+        '.app-header': 'flex',
+        userInfo: 'flex',
+        authButtons: 'none',
+        signOutBtn: 'block'
+      });
       
       if (user.photoURL) {
         userAvatar.src = user.photoURL;
@@ -275,32 +300,26 @@
         userAvatar.style.display = 'none';
       }
       
-      console.log('🔍 User object for display:', {
-        displayName: user.displayName,
-        email: user.email,
-        uid: user.uid
-      });
       userName.textContent = user.displayName || user.email || `Anonymous User`;
       
       // Show/hide admin dashboard button in header based on admin status
       if (adminDashboardBtn) {
         if (isAdmin(user)) {
           adminDashboardBtn.style.display = 'block';
-          console.log('✅ Admin dashboard button visible for:', user.email);
         } else {
           adminDashboardBtn.style.display = 'none';
         }
       }
     } else {
       // User is signed out - show sign-in page
-      console.log('🔒 User not authenticated - showing sign-in page');
-      signInPage.style.display = 'flex';
-      mainApp.style.display = 'none';
-      appHeader.style.display = 'none';
-      
-      userInfo.style.display = 'none';
-      authButtons.style.display = 'flex';
-      signOutBtn.style.display = 'none';
+      setUIState({
+        signInPage: 'flex',
+        mainApp: 'none',
+        '.app-header': 'none',
+        userInfo: 'none',
+        authButtons: 'flex',
+        signOutBtn: 'none'
+      });
       
       // Hide admin dashboard button when signed out
       if (adminDashboardBtn) {
@@ -313,7 +332,6 @@
     // Clear current form when user signs out
     currentFormId = null;
     pendingAdminAccess = false; // Reset admin access flag
-    console.log('🔒 User signed out - clearing all form data');
     clearForms();
     renderPreview();
   }
@@ -337,7 +355,6 @@
       if (currentUser && isAdmin(currentUser)) {
         loadAllForms();
       } else {
-        console.log('❌ Admin access denied or not signed in');
         // Show unauthorized message in admin dashboard
         const statsDiv = document.getElementById('adminStats');
         const formsListDiv = document.getElementById('adminFormsList');
@@ -504,7 +521,6 @@
     }
     
     try {
-      console.log('💾 Attempting to save to Firebase...', { userId: currentUser.uid });
       
       const formData = {
         ...data,
@@ -520,12 +536,10 @@
         // Update existing form
         const docRef = window.firebase.doc(window.firebase.db, 'forms', currentFormId);
         await window.firebase.updateDoc(docRef, formData);
-        console.log('✅ Form updated in Firebase:', currentFormId);
       } else {
         // Create new form
         const docRef = await window.firebase.addDoc(window.firebase.collection(window.firebase.db, 'forms'), formData);
         currentFormId = docRef.id;
-        console.log('✅ Form saved to Firebase:', currentFormId);
       }
       return true;
     } catch (error) {
@@ -536,32 +550,26 @@
   }
   
   async function loadUserForms() {
-    console.log('🔍 loadUserForms called', { firebaseReady, currentUser: !!currentUser, freshMode: isFreshMode() });
     
     if (!firebaseReady) {
-      console.log('❌ Firebase not ready');
       return;
     }
     
     if (!currentUser) {
-      console.log('❌ No current user');
       return;
     }
     
     if (isFreshMode()) {
-      console.log('❌ Fresh mode - skipping data load');
       return;
     }
     
     try {
-      console.log('🔍 Querying Firebase for user forms...');
       const q = window.firebase.query(
         window.firebase.collection(window.firebase.db, 'forms'),
         window.firebase.where('userId', '==', currentUser.uid)
       );
       const querySnapshot = await window.firebase.getDocs(q);
       
-      console.log('🔍 Query result:', { empty: querySnapshot.empty, size: querySnapshot.size });
       
       if (!querySnapshot.empty) {
         // Sort docs by timestamp manually (most recent first)
@@ -576,12 +584,10 @@
         const data = doc.data();
         currentFormId = doc.id;
         
-        console.log('🔍 Loading form data:', { formId: currentFormId, hasData: !!data });
         
         // Load form data (excluding Firebase metadata)
         const { timestamp, lastModified, confirmed, userId, userEmail, userName, isShared, shareId, ...formData } = data;
         
-        console.log('🔍 Form data keys:', Object.keys(formData));
         
         fillForms(formData);
         
@@ -590,10 +596,8 @@
           saveConfirmed(confirmed);
         }
         
-        console.log('✅ User form loaded from Firebase:', currentFormId);
         renderPreview();
       } else {
-        console.log('📝 No saved forms found for user');
       }
     } catch (error) {
       console.error('❌ Error loading user forms:', error);
@@ -608,27 +612,13 @@
 
   async function save(){
     const data = collectData();
-    const saveBtn = document.getElementById('saveBtn');
     
-    // Show saving state
-    const originalText = saveBtn.textContent;
-    saveBtn.textContent = '💾 Saving...';
-    saveBtn.disabled = true;
-    saveBtn.classList.add('saving');
+    setSaveButtonState('saving', '💾 Saving...');
     
     try {
       // Only save for authenticated users
       if (!currentUser) {
-        console.log('🔒 No user signed in - data not saved');
-        saveBtn.textContent = '🔒 Sign in to save';
-        saveBtn.classList.remove('saving');
-        saveBtn.classList.add('error');
-        
-        setTimeout(() => {
-          saveBtn.textContent = originalText;
-          saveBtn.disabled = false;
-          saveBtn.classList.remove('error');
-        }, 3000);
+        setSaveButtonState('error', '🔒 Sign in to save', 3000);
         return;
       }
       
@@ -636,30 +626,10 @@
       const firebaseSaved = await saveToFirebase(data);
       
       renderPreview();
-      
-      // Show success state
-      saveBtn.textContent = '✅ Saved!';
-      saveBtn.classList.remove('saving');
-      saveBtn.classList.add('saved');
-      
-      // Reset button after 2 seconds
-      setTimeout(() => {
-        saveBtn.textContent = originalText;
-        saveBtn.disabled = false;
-        saveBtn.classList.remove('saved');
-      }, 2000);
+      setSaveButtonState('saved', '✅ Saved!', 2000);
       
     } catch (error) {
-      // Show error state
-      saveBtn.textContent = '❌ Error';
-      saveBtn.classList.remove('saving');
-      saveBtn.classList.add('error');
-      
-      setTimeout(() => {
-        saveBtn.textContent = originalText;
-        saveBtn.disabled = false;
-        saveBtn.classList.remove('error');
-      }, 3000);
+      setSaveButtonState('error', '❌ Error', 3000);
     }
   }
 
@@ -676,7 +646,6 @@
   function load(){
     // Always clear forms for unauthenticated users
     if (!currentUser) {
-      console.log('🔒 No user signed in - showing blank form');
       clearForms();
       return;
     }
@@ -688,7 +657,6 @@
     }
     
     // Don't load from localStorage anymore - only Firebase data for authenticated users
-    console.log('🔒 Authenticated user - data will be loaded from Firebase');
   }
 
 
@@ -777,10 +745,24 @@
 
   // Validation functions
   function validateField(field) {
+    // Skip validation for radio buttons and checkboxes
+    if (field.type === 'radio' || field.type === 'checkbox') {
+      clearValidation(field);
+      return;
+    }
+    
     const value = field.value.trim();
     const name = field.name;
     let isValid = true;
     let message = '';
+    
+    // Skip validation for fields in hidden conditional containers or disabled validation
+    const hiddenContainer = field.closest('.conditional-container[style*="display: none"]');
+    const validationDisabled = field.hasAttribute('data-validation-disabled');
+    if (hiddenContainer || validationDisabled) {
+      clearValidation(field);
+      return;
+    }
     
     // Skip validation for empty optional fields
     if (!value && !field.required) {
@@ -898,6 +880,11 @@
     }
   }
 
+  // Prevent browser validation popup messages
+  document.addEventListener('invalid', (e) => {
+    e.preventDefault();
+  }, true);
+  
   // Autosave on input
   document.addEventListener('input', (e)=>{
     if(e.target.matches('input, select')){
@@ -906,8 +893,8 @@
         applyInputFormatting(e.target);
       }
       
-      // Real-time validation
-      if (e.target.matches('input')) {
+      // Real-time validation (skip radio buttons and checkboxes)
+      if (e.target.matches('input') && e.target.type !== 'radio' && e.target.type !== 'checkbox') {
         validateField(e.target);
       }
       
@@ -923,7 +910,6 @@
       
       // Only auto-save for authenticated users
       if (!currentUser) {
-        console.log('🔒 Input detected but no user signed in - not auto-saving');
         return;
       }
       
@@ -978,7 +964,6 @@
     }
     
     if (!firebaseReady) {
-      console.log('❌ Firebase not ready, showing placeholder');
       // Show loading state in admin dashboard
       const statsDiv = document.getElementById('adminStats');
       const formsListDiv = document.getElementById('adminFormsList');
@@ -1017,7 +1002,6 @@
       return forms;
     } catch (error) {
       console.error('❌ Error loading forms:', error);
-      updateFirebaseStatus('❌ Error loading forms', 'error');
     }
   }
   
@@ -1121,7 +1105,6 @@
     
     try {
       await window.firebase.deleteDoc(window.firebase.doc(window.firebase.db, 'forms', formId));
-      console.log('✅ Form deleted:', formId);
       loadAllForms(); // Refresh the list
     } catch (error) {
       console.error('❌ Error deleting form:', error);
@@ -1152,7 +1135,6 @@
       link.download = `ds160-forms-${new Date().toISOString().split('T')[0]}.json`;
       link.click();
       
-      console.log('✅ Data exported by admin:', currentUser.email);
     } catch (error) {
       console.error('❌ Error exporting data:', error);
       alert('Error exporting data. Please try again.');
@@ -1326,7 +1308,6 @@
   if (resetBtn) {
     resetBtn.addEventListener('click', ()=>{
       if (confirm('⚠️ Are you sure you want to reset all form fields?\n\nThis will clear all your entered data and cannot be undone.')) {
-        console.log('🔄 User confirmed form reset');
         clearForms();
         renderPreview();
         
@@ -1816,7 +1797,6 @@
     const email = document.getElementById('signInEmailInput').value.trim();
     const password = document.getElementById('signInPasswordInput').value;
     
-    console.log('📝 Sign-in form submitted with email:', email, 'password length:', password.length);
     
     if (!email || !password) {
       alert('Please enter both email and password.');
@@ -1840,7 +1820,6 @@
     const password = document.getElementById('createPasswordInput').value;
     const confirmPassword = document.getElementById('confirmPasswordInput').value;
     
-    console.log('📝 Create account form submitted with email:', email, 'password length:', password.length);
     
     if (!email || !password || !confirmPassword) {
       alert('Please fill in all fields.');
@@ -1998,117 +1977,7 @@
     }
   });
 
-  // Field help data
-  const fieldHelp = {
-    'surnames': {
-      title: 'Surnames (Family Names)',
-      content: 'Enter your surname exactly as it appears on your passport. This is your family name or last name.',
-      example: 'Smith, Johnson, García'
-    },
-    'givenNames': {
-      title: 'Given Names (First Names)',
-      content: 'Enter all your given names (first and middle names) exactly as they appear on your passport.',
-      example: 'John William, María José'
-    },
-    'nativeAlphabetName': {
-      title: 'Native Alphabet Name',
-      content: 'If your name is written in a non-Latin alphabet (Arabic, Chinese, Cyrillic, etc.), enter your full name here.',
-      example: '张伟, Мария Петрова, محمد أحمد'
-    },
-    'birthCity': {
-      title: 'City of Birth',
-      content: 'Enter the city where you were born, exactly as it appears on your birth certificate or passport.',
-      example: 'New York, London, Mumbai'
-    },
-    'birthCountry': {
-      title: 'Country of Birth',
-      content: 'Select the country where you were born. Use the country name as it existed at the time of your birth.',
-      example: 'If born in USSR, select the current country name'
-    },
-    'nationality': {
-      title: 'Nationality',
-      content: 'Select your current nationality/citizenship. This should match your passport.',
-      example: 'The country that issued your passport'
-    },
-    'usSsn': {
-      title: 'U.S. Social Security Number',
-      content: 'Enter your SSN only if you have been issued one by the U.S. Social Security Administration.',
-      example: '123-45-6789'
-    },
-    'usTin': {
-      title: 'U.S. Taxpayer ID Number',
-      content: 'Enter your Individual Taxpayer Identification Number (ITIN) if you have one.',
-      example: '9XX-XX-XXXX format'
-    },
-    'purpose': {
-      title: 'Purpose of Trip',
-      content: 'Select the main purpose of your visit to the United States. This determines your visa category.',
-      example: 'Tourism, Business, Study, Work'
-    },
-    'dobDay': {
-      title: 'Date of Birth - Day',
-      content: 'Enter the day you were born (1-31). Must match your passport exactly.',
-      example: '15, 03, 28'
-    },
-    'dobMonth': {
-      title: 'Date of Birth - Month',
-      content: 'Select the month you were born. Must match your passport exactly.',
-      example: 'JAN, FEB, MAR...'
-    },
-    'dobYear': {
-      title: 'Date of Birth - Year',
-      content: 'Enter the 4-digit year you were born. Must match your passport exactly.',
-      example: '1985, 1990, 2000'
-    }
-  };
 
-  // Function to add help tooltips
-  function addHelpTooltips() {
-    Object.keys(fieldHelp).forEach(fieldName => {
-      const field = document.querySelector(`[name="${fieldName}"]`);
-      if (field && !field.parentElement.querySelector('.help-tooltip')) {
-        const help = fieldHelp[fieldName];
-        const tooltip = document.createElement('span');
-        tooltip.className = 'help-tooltip';
-        tooltip.innerHTML = `
-          <span class="help-icon">?</span>
-          <div class="tooltip-content">
-            <strong>${help.title}</strong><br>
-            ${help.content}
-            ${help.example ? `<div class="tooltip-example">Example: ${help.example}</div>` : ''}
-          </div>
-        `;
-        
-        // Insert tooltip after the field's label text
-        const label = field.closest('label');
-        if (label) {
-          // Create a label header container if it doesn't exist
-          let labelHeader = label.querySelector('.label-header');
-          if (!labelHeader) {
-            labelHeader = document.createElement('div');
-            labelHeader.className = 'label-header';
-            
-            // Move the label text into the header
-            const labelText = label.firstChild;
-            if (labelText && labelText.nodeType === 3) { // Text node
-              const textSpan = document.createElement('span');
-              textSpan.textContent = labelText.textContent;
-              labelHeader.appendChild(textSpan);
-              label.removeChild(labelText);
-            } else if (labelText) {
-              labelHeader.appendChild(labelText);
-            }
-            
-            // Insert the header at the beginning of the label
-            label.insertBefore(labelHeader, label.firstChild);
-          }
-          
-          // Add tooltip to the header
-          labelHeader.appendChild(tooltip);
-        }
-      }
-    });
-  }
 
   // Input formatting functions
   function formatPhoneNumber(value) {
@@ -2249,7 +2118,6 @@
 
   // Initialize
   window.addEventListener('firebaseReady', () => {
-    console.log('🔥 Firebase initialization complete');
   });
   
   // Conditional field toggling function
@@ -2261,17 +2129,25 @@
       container.style.display = 'block';
       container.classList.add('show');
       container.classList.remove('hide');
+      // Re-enable validation for fields in shown container
+      container.querySelectorAll('input, select, textarea').forEach(el => {
+        el.removeAttribute('data-validation-disabled');
+        clearValidation(el);
+      });
     } else {
       container.style.display = 'none';
       container.classList.add('hide');
       container.classList.remove('show');
-      // Clear inputs in hidden container
+      // Clear inputs and disable validation in hidden container
       container.querySelectorAll('input, select, textarea').forEach(el => {
         if (el.type === 'radio' || el.type === 'checkbox') {
           el.checked = false;
         } else {
           el.value = '';
         }
+        // Disable validation for hidden fields
+        el.setAttribute('data-validation-disabled', 'true');
+        clearValidation(el);
       });
     }
   };
@@ -2288,35 +2164,28 @@
 
   load();
   renderPreview();
-  addHelpTooltips();
   applyConditionalLogic();
   
   // Set up event listeners for elements that might not exist yet
   function setupEventListeners() {
-    console.log('Setting up event listeners...');
     
     // Export PDF functionality
     const exportBtn = document.getElementById('exportBtn');
-    console.log('Export button found:', !!exportBtn);
     if (exportBtn) {
       exportBtn.addEventListener('click', (e) => {
         e.preventDefault();
-        console.log('Export button clicked!');
         window.print();
       });
     }
     
     // User dropdown functionality
     const userInfo = document.getElementById('userInfo');
-    console.log('User info found:', !!userInfo);
     if (userInfo) {
       userInfo.addEventListener('click', (e) => {
         e.stopPropagation();
-        console.log('User info clicked!');
         const userDropdown = document.querySelector('.user-dropdown');
         if (userDropdown) {
           userDropdown.classList.toggle('active');
-          console.log('Dropdown toggled, active:', userDropdown.classList.contains('active'));
         }
       });
     }
